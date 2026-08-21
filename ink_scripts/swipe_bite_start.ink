@@ -1,7 +1,7 @@
 INCLUDE INK FUNCTION LIBRARY/FUNC_essentials.ink
 
 
-VAR hunger = 0
+VAR hunger = 5
 VAR humanity = 10
 VAR heat = 0
 VAR health = 10
@@ -11,6 +11,7 @@ VAR security = 5
 
 VAR nights_lasted = 0
 
+VAR random_upper = 10
 -> start
 
 == start ==
@@ -47,7 +48,7 @@ That's when you knew you weren't human anymore.
 
 
 === random_encounter ===
-~ temp x = RANDOM(1, 8)
+~ temp x = RANDOM(1, random_upper)
 ~ temp who = "nonone"
 
 { x:
@@ -82,8 +83,16 @@ That's when you knew you weren't human anymore.
         ~ who = "FELLOW CRYPTID"        
     - 8:
         FORMER FLAME #HEADER
-        You've crossed paths before. Had a little fun before it fizzled. One of you ghosted the other. Now one is going to become a ghost. #FLAVOR
+        You've crossed paths before. Had a little fun before it fizzled. One of you ghosted the other. Now one of you is really going to become a ghost. #FLAVOR
         ~ who = "FORMER FLAME"   
+    - 9:
+        GOTH SCENESTER #HEADER
+        They're actually excited to get bitten. You're not sure if they actually believe it's real or a kinky sex thing. #FLAVOR
+        ~ who = "GOTH SCENESTER" 
+    - 10:
+        CHEATER #HEADER
+        No face pics and he doesn't want to meet in public. That suits you fine. #FLAVOR
+        ~ who = "FORMER FLAME"         
     - 20:
         ENCOUNTER
         ~ who = "ENCOUNTER"
@@ -106,8 +115,6 @@ That's when you knew you weren't human anymore.
 -> stat_adjust
 
 
-
-
 == stat_adjust
     {hunger < 0:
         ~ hunger = 0
@@ -117,6 +124,9 @@ That's when you knew you weren't human anymore.
         }
     {heat < 0:
         ~ heat = 0
+        }
+    {health > 10:
+        ~ health = 10
         }
 
 ->stat_display
@@ -131,22 +141,20 @@ NIGHT: {nights_lasted} ... HUNGER = {hunger} ... HEAT = {heat} ... HUMANITY = {h
         -> hunger_ending
         }
     {humanity < 0:
-        -> hunger_ending
+        -> humanity_ending
         }
     {heat > 10:
-        -> hunger_ending
+        -> heat_ending
         }
-    {nights_lasted >= 10:
+    {health < 0:
+        -> death_ending
+        }
+    {nights_lasted >= 20:
         -> survival_ending
         }
-        
-        
-        
-
-
-
 
 -> card_assembler
+
 
 == encounters ==
 YOU HAVE AN ENCOUNTER.
@@ -161,6 +169,11 @@ But it's the other vampires that get to you first.
 
 == humanity_ending
 You have lost all humanity.
+
+-> EndDemo
+
+== death_ending
+What is dead cannot die. But it can stop moving. Except for when the wind stirs its remains... ash.
 
 -> EndDemo
 
@@ -186,14 +199,15 @@ YOU WIN!
             {feed:
                 ~ alter(hunger,-1)
                 ~ alter(heat,1)
+                ~ alter(humanity,-1)
             - else:
                 ~ alter(hunger,1)
-                ~ alter(humanity,1)
                 }
         -"PURE HEART":
             {feed:
                 ~ alter(hunger,-1)
-                ~ alter(humanity,-2)
+                ~ alter(humanity,-3)
+                ~ alter(heat,1)
             - else:
                 ~ alter(hunger,1)
                 ~ alter(humanity,2)
@@ -208,7 +222,7 @@ YOU WIN!
                 }            
         -"USEFUL THRALL":
             {feed:
-                ~ alter(heat,-1)
+                ~ alter(heat,0)
                 ~ alter(hunger,-1)
                 ~ alter(humanity,-2)
             - else:
@@ -218,6 +232,7 @@ YOU WIN!
             {feed:
                 ~ alter(heat,2)
                 ~ alter(hunger,-2)
+                
             - else:
                 //~ alter(humanity,1)
                 ~ alter(hunger,1)
@@ -226,6 +241,7 @@ YOU WIN!
             {feed:
                 ~ alter(heat,2)
                 ~ alter(hunger,-3)
+                ~ alter(humanity,-1)
             - else:
                 //~ alter(humanity,1)
                 ~ alter(hunger,1)
@@ -242,10 +258,28 @@ YOU WIN!
             {feed:
                 ~ alter(humanity,-3)
                 ~ alter(hunger,-2)
+                ~ alter(heat,2)
             - else:
                 ~ alter(humanity,2)
                 ~ alter(hunger,1)
                 }   
+        - "GOTH SCENESTER":
+            {feed:
+                ~ alter(humanity,1)
+                ~ alter(hunger,-1)
+                ~ alter(heat,0)
+            - else:
+                ~ alter(humanity,2)
+                ~ alter(hunger,1)
+                } 
+        - "CHEATER":
+            {feed:
+                ~ alter(hunger,-2)
+                ~ alter(heat,0)
+            - else:
+                ~ alter(hunger,2)
+                }
+                
     }
     
 
