@@ -74,7 +74,7 @@ That's when you knew you weren't human anymore.
         
     - 6:
         GYM BRO #HEADER
-        Those thick arms are nices. Especially the engorged veins wrapping them. #FLAVOR
+        Those thick arms are nice. Especially the engorged veins wrapping them. #FLAVOR
         ~ who = "GYM BRO"
     - 7:
         FELLOW CRYPTID #HEADER
@@ -103,20 +103,78 @@ That's when you knew you weren't human anymore.
     ~ alter_stat(who,false)
 -
 
+-> stat_adjust
+
+
+
+
+== stat_adjust
+    {hunger < 0:
+        ~ hunger = 0
+        }
+    {humanity > 10:
+        ~ humanity = 10
+        }
+    {heat < 0:
+        ~ heat = 0
+        }
+
 ->stat_display
-
+        
 == stat_display ==
-
 NIGHT: {nights_lasted} ... HUNGER = {hunger} ... HEAT = {heat} ... HUMANITY = {humanity} #DN_print
 
-CHECK WIN/LOSE CON / IF NONE LOOP #DN_print
+-> win_lose_check
+
+== win_lose_check
+    {hunger > 10:
+        -> hunger_ending
+        }
+    {humanity < 0:
+        -> hunger_ending
+        }
+    {heat > 10:
+        -> hunger_ending
+        }
+    {nights_lasted >= 10:
+        -> survival_ending
+        }
+        
+        
+        
+
+
+
 
 -> card_assembler
 
 == encounters ==
-
 YOU HAVE AN ENCOUNTER.
 -> stat_display
+
+
+== heat_ending
+You have drawn too much attention. Hunters gather, the police investigate.
+But it's the other vampires that get to you first.
+
+-> EndDemo
+
+== humanity_ending
+You have lost all humanity.
+
+-> EndDemo
+
+== hunger_ending
+The cold closes in and you start to tremble, something you haven't done since you turned. Perhaps this is a kind of victory, holding on to humanity.
+
+-> EndDemo
+
+== survival_ending
+
+You lasted 10 days... survival is all that matters and you are a survivor.
+
+-> EndDemo
+
 
 == EndDemo ==
 YOU WIN!
@@ -167,27 +225,29 @@ YOU WIN!
         - "GYM BRO": // MORE JUICE!
             {feed:
                 ~ alter(heat,2)
-                ~ alter(hunger,-2)
+                ~ alter(hunger,-3)
             - else:
                 //~ alter(humanity,1)
                 ~ alter(hunger,1)
                 }
         - "FELLOW CRYPTID":
             {feed:
-                ~ alter(heat,2)
-                ~ alter(hunger,-2)
+                ~ alter(heat,-1)
+                ~ alter(hunger,0)
             - else:
-                //~ alter(humanity,1)
+                ~ alter(humanity,2)
                 ~ alter(hunger,1)
                 }
         - "FORMER FLAME":
             {feed:
-                ~ alter(heat,2)
+                ~ alter(humanity,-3)
                 ~ alter(hunger,-2)
             - else:
-                //~ alter(humanity,1)
+                ~ alter(humanity,2)
                 ~ alter(hunger,1)
                 }   
     }
+    
+
 
 
