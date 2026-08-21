@@ -17,6 +17,20 @@ VAR nights_lasted = 0
 GAME OPENING SCREEN etc.
 
 + Play Game
+-
+Memories of that night twist like sweat-soaked sheets. Flashes of acid clarity clashing with impossible visions. Shuddering under a scalding shower desperate to get warm. Bolting down raw meat, insatiably hungry.
++ [continue]
+-
+And the teeth.
++ [continue]
+-
+Standing in front of the mirror horrified and holding the tooth that had fallen past your lips, pushed by a curious tongue.
+And your curious tongue pricked by the thorn that pushed through the gape.
++ [continue]
+-
+That's when you knew you weren't human anymore.
++ [continue]
+-
 
 ->stat_display
 
@@ -33,34 +47,42 @@ GAME OPENING SCREEN etc.
 
 
 === random_encounter ===
-~ temp x = RANDOM(1, 5)
+~ temp x = RANDOM(1, 8)
 ~ temp who = "nonone"
 
 { x:
     - 1:
-        TASTY CIVILIAN
+        TASTY CIVILIAN #HEADER #IMAGE:SPIKY_HAIR
+        A total normie. #FLAVOR
         ~ who = "TASTY CIVILIAN"
     - 2:
-        HUNTER
+        HUNTER #HEADER
+        Buff but his eyes are haunted. He's not looking for a date, he's looking for revenge. #FLAVOR
         ~ who = "HUNTER"
     - 3:
-        MEGA DOUCHE
+        MEGA DOUCHE #HEADER
+        His first message is a dick. #FLAVOR
         ~ who = "MEGA DOUCHE"
     - 4:
-        PURE HEART
+        PURE HEART #HEADER
+        They have kind eyes. Too kind to survive in a world this cruel. Would it be kindness to spare them?
         ~ who = "PURE HEART"
     - 5:
-        USEFUL THRALL
+        USEFUL THRALL #HEADER
+        Handy with powertools. Capable of walking in sunlight. If he didn't have a service kink, he will soon. #FLAVOR
         ~ who = "USEFUL THRALL"
         
     - 6:
-        GYM BRO // MORE JUICE!
+        GYM BRO #HEADER
+        Those thick arms are nices. Especially the engorged veins wrapping them. #FLAVOR
         ~ who = "GYM BRO"
     - 7:
-        FELLOW CRYPTID
+        FELLOW CRYPTID #HEADER
+        Its smile is too feral. Its glittering skin too moist. That's not make up. #FLAVOR
         ~ who = "FELLOW CRYPTID"        
     - 8:
-        FORMER FLAME
+        FORMER FLAME #HEADER
+        You've crossed paths before. Had a little fun before it fizzled. One of you ghosted the other. Now one is going to become a ghost. #FLAVOR
         ~ who = "FORMER FLAME"   
     - 20:
         ENCOUNTER
@@ -85,10 +107,9 @@ GAME OPENING SCREEN etc.
 
 == stat_display ==
 
-NIGHT: {nights_lasted}
-HUNGER = {hunger} ... HEAT = {heat} ... HUMANITY = {humanity}
+NIGHT: {nights_lasted} ... HUNGER = {hunger} ... HEAT = {heat} ... HUMANITY = {humanity} #DN_print
 
-CHECK WIN/LOSE CON / IF NONE LOOP//-> END
+CHECK WIN/LOSE CON / IF NONE LOOP #DN_print
 
 -> card_assembler
 
@@ -143,6 +164,30 @@ YOU WIN!
                 //~ alter(humanity,1)
                 ~ alter(hunger,1)
                 }  
+        - "GYM BRO": // MORE JUICE!
+            {feed:
+                ~ alter(heat,2)
+                ~ alter(hunger,-2)
+            - else:
+                //~ alter(humanity,1)
+                ~ alter(hunger,1)
+                }
+        - "FELLOW CRYPTID":
+            {feed:
+                ~ alter(heat,2)
+                ~ alter(hunger,-2)
+            - else:
+                //~ alter(humanity,1)
+                ~ alter(hunger,1)
+                }
+        - "FORMER FLAME":
+            {feed:
+                ~ alter(heat,2)
+                ~ alter(hunger,-2)
+            - else:
+                //~ alter(humanity,1)
+                ~ alter(hunger,1)
+                }   
     }
 
 
