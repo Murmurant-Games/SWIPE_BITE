@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://bb4g0ohqgsw1q"]
+
+[ext_resource type="Script" uid="uid://buncttsr2u0kh" path="res://scenes/stat_ui.gd" id="1_tqlgq"]
+
+[node name="StatUI" type="VBoxContainer" unique_id=333489683]
+custom_minimum_size = Vector2(128, 60)
+offset_right = 128.0
+offset_bottom = 60.0
+size_flags_horizontal = 4
+script = ExtResource("1_tqlgq")
+
+[node name="rtlName" type="RichTextLabel" parent="." unique_id=254005926]
+layout_mode = 2
+size_flags_vertical = 3
+bbcode_enabled = true
+text = "Name"
+horizontal_alignment = 1
+
+[node name="rtlValue" type="RichTextLabel" parent="." unique_id=1412474882]
+layout_mode = 2
+size_flags_vertical = 3
+text = "Value"
+horizontal_alignment = 1

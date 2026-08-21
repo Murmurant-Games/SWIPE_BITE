@@ -11,19 +11,13 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_o5qli")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=35957895]
-visible = false
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=774679135]
 layout_mode = 1
-anchors_preset = 15
+anchors_preset = 10
 anchor_right = 1.0
-anchor_bottom = 1.0
+offset_bottom = 64.0
 grow_horizontal = 2
-grow_vertical = 2
 
-[node name="rtlStory" type="RichTextLabel" parent="HBoxContainer" unique_id=1570997192]
+[node name="hboxStats" type="HBoxContainer" parent="PanelContainer" unique_id=35957895]
 layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="vboxChoices" type="VBoxContainer" parent="HBoxContainer" unique_id=34285699]
-layout_mode = 2
-size_flags_horizontal = 3
+alignment = 1

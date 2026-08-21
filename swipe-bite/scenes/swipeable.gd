@@ -30,7 +30,6 @@ func _process(delta: float) -> void:
 		var mouse_x_delta = get_local_mouse_position().x / 400.0
 		mouse_x_delta = clampf(mouse_x_delta, -1, 1)
 		card_target_pos.x = card_inital_pos.x + lerpf(0, 200, mouse_x_delta)
-		#pnl_card.position.x = card_inital_pos.x + lerpf(0, 200, mouse_x_delta)
 		pnl_card.rotation_degrees = lerpf(0, 30, mouse_x_delta)
 		
 	else:
