@@ -1,9 +1,13 @@
 INCLUDE INK FUNCTION LIBRARY/FUNC_essentials.ink
 
 
-VAR hunger = 5
+VAR hunger = 0
 VAR humanity = 10
 VAR heat = 0
+VAR health = 10
+
+VAR sanity = 5
+VAR security = 5
 
 VAR nights_lasted = 0
 
@@ -40,15 +44,25 @@ GAME OPENING SCREEN etc.
         HUNTER
         ~ who = "HUNTER"
     - 3:
-        DOUCHE
-        ~ who = "DOUCHE"
+        MEGA DOUCHE
+        ~ who = "MEGA DOUCHE"
     - 4:
         PURE HEART
         ~ who = "PURE HEART"
     - 5:
         USEFUL THRALL
         ~ who = "USEFUL THRALL"
+        
     - 6:
+        GYM BRO // MORE JUICE!
+        ~ who = "GYM BRO"
+    - 7:
+        FELLOW CRYPTID
+        ~ who = "FELLOW CRYPTID"        
+    - 8:
+        FORMER FLAME
+        ~ who = "FORMER FLAME"   
+    - 20:
         ENCOUNTER
         ~ who = "ENCOUNTER"
 }
@@ -61,9 +75,9 @@ GAME OPENING SCREEN etc.
 ~ nights_lasted ++
 {who == "ENCOUNTER": -> encounters}
 
-+ YES to {who} //RETURN TRUE
++ FEED / FACE: {who} //RETURN TRUE
     ~ alter_stat(who,true)
-+ NO to {who} //RETURN FALSE
++ SPARE / AVOID: {who} //RETURN FALSE
     ~ alter_stat(who,false)
 -
 
@@ -87,10 +101,10 @@ YOU HAVE AN ENCOUNTER.
 YOU WIN!
 ->END
 
-=== function alter_stat(character, bool) ===
+=== function alter_stat(character, feed) ===
     { character:
         -"TASTY CIVILIAN":
-            {bool:
+            {feed:
                 ~ alter(hunger,-1)
                 ~ alter(heat,1)
             - else:
@@ -98,7 +112,7 @@ YOU WIN!
                 ~ alter(humanity,1)
                 }
         -"PURE HEART":
-            {bool:
+            {feed:
                 ~ alter(hunger,-1)
                 ~ alter(humanity,-2)
             - else:
@@ -106,23 +120,23 @@ YOU WIN!
                 ~ alter(humanity,2)
                 }
         -"HUNTER":
-            {bool:
+            {feed:
                 ~ alter(hunger,2)
-                ~ alter(humanity,-1)
+                ~ alter(heat,-3)
             - else:
                 ~ alter(hunger,1)
-                ~ alter(heat,-2)
+                ~ alter(heat,2)
                 }            
         -"USEFUL THRALL":
-            {bool:
+            {feed:
                 ~ alter(heat,-1)
                 ~ alter(hunger,-1)
                 ~ alter(humanity,-2)
             - else:
                 ~ alter(hunger,1)
                 }       
-        -"DOUCHE":
-            {bool:
+        -"MEGA DOUCHE":
+            {feed:
                 ~ alter(heat,2)
                 ~ alter(hunger,-2)
             - else:
