@@ -29,6 +29,10 @@ window/stretch/aspect="expand"
 
 project/assembly_name="swipe-bite"
 
+[editor]
+
+movie_writer/movie_file="C:/Users/Rena/Documents/Godot 4 Projects/SwipeBite/swipe-bite/a.avi"
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/GodotInk/plugin.cfg")

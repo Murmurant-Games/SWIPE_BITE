@@ -1,5 +1,56 @@
 [gd_scene format=3 uid="uid://burecohv2qxav"]
 
+[ext_resource type="Script" uid="uid://1uk0batu6gp6" path="res://scenes/swipeable.gd" id="1_ujlfe"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ujlfe"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.265625, 0.265625, 0.265625, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+
+[sub_resource type="Animation" id="Animation_ujlfe"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("pnlCard:position:y")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [-150.0]
+}
+
+[sub_resource type="Animation" id="Animation_801ac"]
+resource_name = "show"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("pnlCard:position:y")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(0.16493845, 0.16493845),
+"update": 0,
+"values": [400.0, -150.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_gdr0j"]
+_data = {
+&"RESET": SubResource("Animation_ujlfe"),
+&"show": SubResource("Animation_801ac")
+}
+
 [node name="Swipeable" type="Control" unique_id=1155580600]
 layout_mode = 3
 anchors_preset = 8
@@ -9,8 +60,12 @@ anchor_right = 0.5
 anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("1_ujlfe")
 
-[node name="ColorRect" type="ColorRect" parent="." unique_id=1408781148]
+[node name="pnlCard" type="PanelContainer" parent="." unique_id=2007881664]
+custom_minimum_size = Vector2(200, 300)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -20,14 +75,62 @@ anchor_bottom = 0.5
 offset_left = -100.0
 offset_top = -150.0
 offset_right = 100.0
-offset_bottom = 150.0
+offset_bottom = 150.00006
 grow_horizontal = 2
 grow_vertical = 2
+pivot_offset = Vector2(100, 300)
+theme_override_styles/panel = SubResource("StyleBoxFlat_ujlfe")
 
-[node name="Button" type="Button" parent="ColorRect" unique_id=115616721]
+[node name="Control" type="Control" parent="pnlCard" unique_id=1316311153]
+layout_mode = 2
+
+[node name="rtlStoryText" type="RichTextLabel" parent="pnlCard/Control" unique_id=1909863562]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+bbcode_enabled = true
+text = "asdasdasd"
+
+[node name="Button" type="Button" parent="pnlCard" unique_id=115616721]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+
+[node name="rtlLeft" type="RichTextLabel" parent="." unique_id=1244383731]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 250.0
+offset_top = -20.0
+offset_right = 500.0
+offset_bottom = 20.0
+grow_vertical = 2
+bbcode_enabled = true
+text = "Left"
+horizontal_alignment = 2
+
+[node name="rtlRight" type="RichTextLabel" parent="." unique_id=1925841073]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -500.0
+offset_top = -20.0
+offset_right = -250.0
+offset_bottom = 20.0
+grow_horizontal = 0
+grow_vertical = 2
+bbcode_enabled = true
+text = "Right"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=640789019]
+libraries/ = SubResource("AnimationLibrary_gdr0j")
+autoplay = &"show"
+
+[connection signal="button_down" from="pnlCard/Button" to="." method="_on_button_button_down"]
+[connection signal="button_up" from="pnlCard/Button" to="." method="_on_button_button_up"]
