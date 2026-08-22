@@ -1,4 +1,6 @@
 INCLUDE INK FUNCTION LIBRARY/FUNC_essentials.ink
+INCLUDE swipe_bite_syn.ink
+
 
 
 VAR hunger = 5
@@ -53,45 +55,54 @@ That's when you knew you weren't human anymore.
 
 { x:
     - 1:
-        TASTY CIVILIAN #HEADER #IMAGE:SPIKY_HAIR
-        A total normie. #FLAVOR
+        TASTY CIVILIAN #HEADER
+        ~ normie_bio()
+        <> #FLAVOR
         ~ who = "TASTY CIVILIAN"
     - 2:
         HUNTER #HEADER
-        Buff but his eyes are haunted. He's not looking for a date, he's looking for revenge. #FLAVOR
+        ~ hunter_bio()
+        <> #FLAVOR
         ~ who = "HUNTER"
     - 3:
         MEGA DOUCHE #HEADER
-        His first message is a dick. #FLAVOR
+        ~ douche_bio()
+        <> #FLAVOR
         ~ who = "MEGA DOUCHE"
     - 4:
         PURE HEART #HEADER
-        They have kind eyes. Too kind to survive in a world this cruel. Would it be kindness to spare them?
+        ~ innocent_bio()
         ~ who = "PURE HEART"
     - 5:
         USEFUL THRALL #HEADER
-        Handy with powertools. Capable of walking in sunlight. If he didn't have a service kink, he will soon. #FLAVOR
+        ~ thrall_bio()
+        <> #FLAVOR
         ~ who = "USEFUL THRALL"
         
     - 6:
         GYM BRO #HEADER
-        Those thick arms are nice. Especially the engorged veins wrapping them. #FLAVOR
+        ~ gym_bro_bio()
+        <> #FLAVOR
         ~ who = "GYM BRO"
     - 7:
         FELLOW CRYPTID #HEADER
-        Its smile is too feral. Its glittering skin too moist. That's not make up. #FLAVOR
+        ~ cryptid_bio()
+        <> #FLAVOR
         ~ who = "FELLOW CRYPTID"        
     - 8:
         FORMER FLAME #HEADER
-        You've crossed paths before. Had a little fun before it fizzled. One of you ghosted the other. Now one of you is really going to become a ghost. #FLAVOR
+        
+        <> #FLAVOR
         ~ who = "FORMER FLAME"   
     - 9:
         GOTH SCENESTER #HEADER
-        They're actually excited to get bitten. You're not sure if they actually believe it's real or a kinky sex thing. #FLAVOR
+        
+        <> #FLAVOR
         ~ who = "GOTH SCENESTER" 
     - 10:
         CHEATER #HEADER
-        No face pics and he doesn't want to meet in public. That suits you fine. #FLAVOR
+        
+        <> #FLAVOR
         ~ who = "FORMER FLAME"         
     - 20:
         ENCOUNTER
@@ -173,12 +184,12 @@ You have lost all humanity.
 -> EndDemo
 
 == death_ending
-What is dead cannot die. But it can stop moving. Except for when the wind stirs its remains... ash.
+What is dead cannot die. But it can stop moving. Except for when the wind stirs the ash of its remains.
 
 -> EndDemo
 
 == hunger_ending
-The cold closes in and you start to tremble, something you haven't done since you turned. Perhaps this is a kind of victory, holding on to humanity.
+The cold closes in and you start to tremble, something you haven't done since you turned. Perhaps this is a kind of victory, holding on to your humanity to the end.
 
 -> EndDemo
 
@@ -190,7 +201,8 @@ You lasted 10 days... survival is all that matters and you are a survivor.
 
 
 == EndDemo ==
-YOU WIN!
+
+
 ->END
 
 === function alter_stat(character, feed) ===
@@ -210,7 +222,7 @@ YOU WIN!
                 ~ alter(heat,1)
             - else:
                 ~ alter(hunger,1)
-                ~ alter(humanity,2)
+                ~ alter(humanity,1)
                 }
         -"HUNTER":
             {feed:
