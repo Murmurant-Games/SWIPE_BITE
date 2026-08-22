@@ -82,6 +82,12 @@
     ~ list -= dealt_value
     ~ var += dealt_value
 
+=== function deal_return(ref list)
+    // add a random available value from specific list to specific variable and mark unavailable
+    ~ temp dealt_value = LIST_RANDOM(list)
+    ~ list -= dealt_value
+    ~ return dealt_value
+
 === function pick(value, ref var, ref list)
     // add a specific available value from specific list to specific variable and mark unavailable
     ~ list -= value

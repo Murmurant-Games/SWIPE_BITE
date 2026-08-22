@@ -1,6 +1,7 @@
 INCLUDE INK FUNCTION LIBRARY/FUNC_essentials.ink
 INCLUDE swipe_bite_syn.ink
-
+INCLUDE swipe_bite_variables.ink
+INCLUDE swipe_bite_card_effects.ink
 
 
 VAR hunger = 5
@@ -14,13 +15,26 @@ VAR security = 5
 VAR nights_lasted = 0
 
 VAR random_upper = 10
+
+VAR next_card = ()
+
+VAR endings_reached = 0
+
+VAR hunters_avoided = 0
+
 -> start
 
 == start ==
 GAME OPENING SCREEN etc.
 
+{endings_reached:->choose_character->}
+
+
 + Play Game
 -
+    -> random_encounter
+
+== intro
 Memories of that night twist like sweat-soaked sheets. Flashes of acid clarity clashing with impossible visions. Shuddering under a scalding shower desperate to get warm. Bolting down raw meat, insatiably hungry.
 + [continue]
 -
@@ -34,95 +48,45 @@ And your curious tongue pricked by the thorn that pushed through the gape.
 That's when you knew you weren't human anymore.
 + [continue]
 -
-
-->stat_display
-
---> card_assembler
-
-->DONE
-
-
-== card_assembler ==
-
-
 -> random_encounter
 
 
-
 === random_encounter ===
-~ temp x = RANDOM(1, random_upper)
-~ temp who = "nonone"
 
-{ x:
-    - 1:
-        TASTY CIVILIAN #HEADER
-        ~ normie_bio()
-        <> #FLAVOR
-        ~ who = "TASTY CIVILIAN"
-    - 2:
-        HUNTER #HEADER
-        ~ hunter_bio()
-        <> #FLAVOR
-        ~ who = "HUNTER"
-    - 3:
-        MEGA DOUCHE #HEADER
-        ~ douche_bio()
-        <> #FLAVOR
-        ~ who = "MEGA DOUCHE"
-    - 4:
-        PURE HEART #HEADER
-        ~ innocent_bio()
-        ~ who = "PURE HEART"
-    - 5:
-        USEFUL THRALL #HEADER
-        ~ thrall_bio()
-        <> #FLAVOR
-        ~ who = "USEFUL THRALL"
-        
-    - 6:
-        GYM BRO #HEADER
-        ~ gym_bro_bio()
-        <> #FLAVOR
-        ~ who = "GYM BRO"
-    - 7:
-        FELLOW CRYPTID #HEADER
-        ~ cryptid_bio()
-        <> #FLAVOR
-        ~ who = "FELLOW CRYPTID"        
-    - 8:
-        FORMER FLAME #HEADER
-        
-        <> #FLAVOR
-        ~ who = "FORMER FLAME"   
-    - 9:
-        GOTH SCENESTER #HEADER
-        
-        <> #FLAVOR
-        ~ who = "GOTH SCENESTER" 
-    - 10:
-        CHEATER #HEADER
-        
-        <> #FLAVOR
-        ~ who = "FORMER FLAME"         
-    - 20:
-        ENCOUNTER
-        ~ who = "ENCOUNTER"
-}
+{LIST_COUNT(cards) == 0: -> dawn_comes}
 
--> yes_no(who)
+~ temp who = ()
+
+~ deal(who, cards)
 
 
 
-== yes_no(who) ==
-~ nights_lasted ++
-{who == "ENCOUNTER": -> encounters}
+->print_bio(who)->
 
 + FEED / FACE: {who} //RETURN TRUE
-    ~ alter_stat(who,true)
+    -> alter_stat(who,true)->
 + SPARE / AVOID: {who} //RETURN FALSE
-    ~ alter_stat(who,false)
+    -> alter_stat(who,false)->
 -
+-> win_lose_check
 
+
+== win_lose_check
+    {hunger > 10:
+        -> hunger_ending
+        }
+    {humanity < 0:
+        -> humanity_ending
+        }
+    {heat > 10:
+        -> heat_ending
+        }
+    {health < 0:
+        -> death_ending
+        }
+    {nights_lasted >= 20:
+        -> survival_ending
+        }
 -> stat_adjust
 
 
@@ -145,29 +109,30 @@ That's when you knew you weren't human anymore.
 == stat_display ==
 NIGHT: {nights_lasted} ... HUNGER = {hunger} ... HEAT = {heat} ... HUMANITY = {humanity} #DN_print
 
+-> random_encounter
+
+
+== dawn_comes
+
+~ nights_lasted ++
+INCREASE COUNTER, RESET DECK # DN_print
+
+~ endings_reached ++
+
+~ cards += (douche, normie, cheater, hunter, innocent,gym_bro)
+
+{hunters_avoided:
+    - 1:
+        ~ cards += (another_hunter)
+    - 2:
+        ~ cards += (another_hunter, experienced_hunter)
+}
+
+//, cryptid, vampire, (goth), former_flame, ghost, your_sire, detective, mortal_lover
+
 -> win_lose_check
 
-== win_lose_check
-    {hunger > 10:
-        -> hunger_ending
-        }
-    {humanity < 0:
-        -> humanity_ending
-        }
-    {heat > 10:
-        -> heat_ending
-        }
-    {health < 0:
-        -> death_ending
-        }
-    {nights_lasted >= 20:
-        -> survival_ending
-        }
-
--> card_assembler
-
-
-== encounters ==
+== encounter_happens ==
 YOU HAVE AN ENCOUNTER.
 -> stat_display
 
@@ -202,98 +167,15 @@ You lasted 10 days... survival is all that matters and you are a survivor.
 
 == EndDemo ==
 
+THE END
 
 ->END
 
-=== function alter_stat(character, feed) ===
-    { character:
-        -"TASTY CIVILIAN":
-            {feed:
-                ~ alter(hunger,-1)
-                ~ alter(heat,1)
-                ~ alter(humanity,-1)
-            - else:
-                ~ alter(hunger,1)
-                }
-        -"PURE HEART":
-            {feed:
-                ~ alter(hunger,-1)
-                ~ alter(humanity,-3)
-                ~ alter(heat,1)
-            - else:
-                ~ alter(hunger,1)
-                ~ alter(humanity,1)
-                }
-        -"HUNTER":
-            {feed:
-                ~ alter(hunger,2)
-                ~ alter(heat,-3)
-            - else:
-                ~ alter(hunger,1)
-                ~ alter(heat,2)
-                }            
-        -"USEFUL THRALL":
-            {feed:
-                ~ alter(heat,0)
-                ~ alter(hunger,-1)
-                ~ alter(humanity,-2)
-            - else:
-                ~ alter(hunger,1)
-                }       
-        -"MEGA DOUCHE":
-            {feed:
-                ~ alter(heat,2)
-                ~ alter(hunger,-2)
-                
-            - else:
-                //~ alter(humanity,1)
-                ~ alter(hunger,1)
-                }  
-        - "GYM BRO": // MORE JUICE!
-            {feed:
-                ~ alter(heat,2)
-                ~ alter(hunger,-3)
-                ~ alter(humanity,-1)
-            - else:
-                //~ alter(humanity,1)
-                ~ alter(hunger,1)
-                }
-        - "FELLOW CRYPTID":
-            {feed:
-                ~ alter(heat,-1)
-                ~ alter(hunger,0)
-            - else:
-                ~ alter(humanity,2)
-                ~ alter(hunger,1)
-                }
-        - "FORMER FLAME":
-            {feed:
-                ~ alter(humanity,-3)
-                ~ alter(hunger,-2)
-                ~ alter(heat,2)
-            - else:
-                ~ alter(humanity,2)
-                ~ alter(hunger,1)
-                }   
-        - "GOTH SCENESTER":
-            {feed:
-                ~ alter(humanity,1)
-                ~ alter(hunger,-1)
-                ~ alter(heat,0)
-            - else:
-                ~ alter(humanity,2)
-                ~ alter(hunger,1)
-                } 
-        - "CHEATER":
-            {feed:
-                ~ alter(hunger,-2)
-                ~ alter(heat,0)
-            - else:
-                ~ alter(hunger,2)
-                }
-                
-    }
-    
-
-
+== choose_character 
+Choose Vampire:
+    + Basic
+    + Ancient One
+    + Unavailable
+    -
+->->
 
