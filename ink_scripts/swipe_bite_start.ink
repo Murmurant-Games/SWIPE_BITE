@@ -44,6 +44,12 @@ Play throughs: {endings_reached}
 + LOCK RANDOMISER
     ~ SEED_RANDOM(235)
 -
+
+~ hunger = 5
+~ humanity = 10
+~ heat = 0
+
+
 The Night Begins... Your first...
     -> random_encounter
 
