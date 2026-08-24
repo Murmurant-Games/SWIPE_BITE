@@ -35,6 +35,97 @@
     ->->
 
 
+=== print_outcome(character, feed) ===
+{ character:
+        -normie:
+            {feed:
+                He's as bland as expected.
+            - else:
+                Let him live, ignorant of the excitement that would have killed him.
+                }
+        -innocent:
+            {feed:
+                She's enchanting. Immune to your glamour, she unmasks your pain.
+            - else:
+                Spare her. She doesn't need to know how monstrous the world is.
+                }
+        -hunter:
+
+            {feed:
+                He wasn't ready for your speed. But his holy water melted the skin from your arm.
+            - else:
+                You avoided the hunter... but he won't give up the trail.
+                }
+                
+        -another_hunter:
+
+            {feed:
+                He wasn't ready for your speed. But his holy water melted the skin from your arm.
+            - else:
+                You avoided the hunter... but he won't give up the trail.
+                }  
+        -experienced_hunter:
+
+            {feed:
+                He wasn't ready for your speed. But his holy water melted the skin from your arm.
+            - else:
+                You avoided the hunter... but he won't give up the trail.
+                }  
+        -thrall:
+
+            {feed:
+                A little blood to bind them to your will. Now you have a servant.
+            - else:
+                The idea of making a slave repels your fraying humanity.
+                }       
+        -douche:
+
+            {feed:
+                You should feel guilt. Even for him. Even for him. Even for him. But you don't.
+                
+            - else:
+                You let him pass by but your hunger is growing.
+                }  
+                
+        - gym_bro: // MORE JUICE!
+
+            {feed:
+                Oh blooood - the STRENGTH you feel. The vitality!
+            - else:
+                You abstain, cautious.
+                }
+        - cryptid:
+            {feed:
+                Its blood is bitter, but dazzling. You spend the rest of the night tripping under the rippling refractions of its skin.
+            - else:
+                You avoid it, uneasy about what an encounter might entail.
+                }
+        - former_flame:
+            {feed:
+                Love and lust turned into frenzy. This was a mistake.
+            - else:
+                You don't want to feed on anyone you know. A rule you create.
+                }   
+        - goth:
+            {feed:
+                ~ alter(humanity,1)
+                ~ alter(hunger,-1)
+                ~ alter(heat,0)
+            - else:
+                ~ alter(humanity,2)
+                ~ alter(hunger,1)
+                } 
+        - cheater:
+            {feed:
+                ~ alter(hunger,-2)
+                ~ alter(heat,0)
+            - else:
+                ~ alter(hunger,2)
+                }
+                
+    }
+    ->->
+    
 === function douche_bio()
 Douche #HEADER
 {~ He's wearing a trucker cap backwards.|His fingers are knotted in a parody handsign.}
@@ -69,7 +160,7 @@ Experienced Hunter  #HEADER
 
 === function innocent_bio()
 Innocent  #HEADER
-{~ They have kind eyes.Too kind to survive in a world this cruel. Would it be kindness to spare them?|In one photo a bird is perched on her finger, she smiling in pure delight.} #FLAVOR
+{~ They have kind eyes.Too kind to survive in a world this cruel. Would it be kindness to spare them?|In one photo a bird is perched on her finger, she's smiling in pure delight.} #FLAVOR
 
 === function thrall_bio()
 Thrall  #HEADER

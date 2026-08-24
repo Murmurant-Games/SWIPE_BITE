@@ -2,6 +2,8 @@ INCLUDE INK FUNCTION LIBRARY/FUNC_essentials.ink
 INCLUDE swipe_bite_syn.ink
 INCLUDE swipe_bite_variables.ink
 INCLUDE swipe_bite_card_effects.ink
+INCLUDE swipe_bite_endings.ink
+
 
 
 VAR hunger = 5
@@ -22,16 +24,27 @@ VAR endings_reached = 0
 
 VAR hunters_avoided = 0
 
+VAR cards_seen = 0
+
 -> start
 
 == start ==
 GAME OPENING SCREEN etc.
+ //❀ ⚸  👁 ❣🩸 ⚗ ⚱ N
+->intro->
+->play_menu
+
+== play_menu
+Play throughs: {endings_reached}
 
 {endings_reached:->choose_character->}
 
 
 + Play Game
++ LOCK RANDOMISER
+    ~ SEED_RANDOM(235)
 -
+The Night Begins... Your first...
     -> random_encounter
 
 == intro
@@ -48,7 +61,7 @@ And your curious tongue pricked by the thorn that pushed through the gape.
 That's when you knew you weren't human anymore.
 + [continue]
 -
--> random_encounter
+->->
 
 
 === random_encounter ===
@@ -60,9 +73,9 @@ That's when you knew you weren't human anymore.
 ~ deal(who, cards)
 
 
-
+NEXT:
 ->print_bio(who)->
-
+~ cards_seen ++
 + FEED / FACE: {who} //RETURN TRUE
     -> alter_stat(who,true)->
 + SPARE / AVOID: {who} //RETURN FALSE
@@ -107,7 +120,8 @@ That's when you knew you weren't human anymore.
 ->stat_display
         
 == stat_display ==
-NIGHT: {nights_lasted} ... HUNGER = {hunger} ... HEAT = {heat} ... HUMANITY = {humanity} #DN_print
+NIGHT: {nights_lasted} CARDS SEEN: {cards_seen}
+... HUNGER: {hunger} HEAT: {heat} HUMANITY: {humanity} #DN_print
 
 -> random_encounter
 
@@ -117,7 +131,7 @@ NIGHT: {nights_lasted} ... HUNGER = {hunger} ... HEAT = {heat} ... HUMANITY = {h
 ~ nights_lasted ++
 INCREASE COUNTER, RESET DECK # DN_print
 
-~ endings_reached ++
+
 
 ~ cards += (douche, normie, cheater, hunter, innocent,gym_bro)
 
@@ -137,45 +151,10 @@ YOU HAVE AN ENCOUNTER.
 -> stat_display
 
 
-== heat_ending
-You have drawn too much attention. Hunters gather, the police investigate.
-But it's the other vampires that get to you first.
-
--> EndDemo
-
-== humanity_ending
-You have lost all humanity.
-
--> EndDemo
-
-== death_ending
-What is dead cannot die. But it can stop moving. Except for when the wind stirs the ash of its remains.
-
--> EndDemo
-
-== hunger_ending
-The cold closes in and you start to tremble, something you haven't done since you turned. Perhaps this is a kind of victory, holding on to your humanity to the end.
-
--> EndDemo
-
-== survival_ending
-
-You lasted 10 days... survival is all that matters and you are a survivor.
-
--> EndDemo
-
-
-== EndDemo ==
-
-THE END
-
-->END
-
 == choose_character 
 Choose Vampire:
     + Basic
-    + Ancient One
+    + Siren (+1 Feed / +1 Heat)
     + Unavailable
     -
 ->->
-
