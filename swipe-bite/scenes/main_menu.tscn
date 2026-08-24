@@ -1,0 +1,48 @@
+[gd_scene format=3 uid="uid://q32xx74prj6g"]
+
+[ext_resource type="Script" uid="uid://2cy6xo6pewpt" path="res://scenes/main_menu.gd" id="1_l6cm7"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o1cif"]
+content_margin_top = 16.0
+bg_color = Color(0.21484375, 0.0013067434, 0, 1)
+border_width_bottom = 288
+border_color = Color(0, 0, 0, 1)
+border_blend = true
+
+[node name="MainMenu" type="Control" unique_id=2052804960]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_l6cm7")
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=2104899676]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_o1cif")
+
+[node name="rtlTitle" type="RichTextLabel" parent="PanelContainer" unique_id=940309347]
+custom_minimum_size = Vector2(1100, 150)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_font_sizes/normal_font_size = 56
+text = "Swipe Bite"
+horizontal_alignment = 1
+
+[node name="btnPlay" type="Button" parent="PanelContainer" unique_id=764427443]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 36
+text = "PLAY"
+
+[connection signal="pressed" from="PanelContainer/btnPlay" to="." method="_on_btn_play_pressed"]

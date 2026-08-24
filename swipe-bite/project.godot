@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="swipe-bite"
-run/main_scene="uid://lgyldhut1lb1"
+run/main_scene="uid://q32xx74prj6g"
 config/features=PackedStringArray("4.7", "C#", "GL Compatibility")
 config/icon="res://icon.svg"
 

@@ -14,16 +14,21 @@ var card_target_pos : Vector2 = Vector2.ZERO
 var pos_smoothing_factor : float = 0.25
 
 func setup(story : InkStory):
-	text = story.ContinueMaximally()
-	rtl_story_text.text = text
-	story.GetCurrentChoices().map(
-		func(ink_choice : InkChoice):
-			var choice : Choice = Choice.new()
-			choice.setup(story, ink_choice)
-			choices.append(choice))
-	choice_texts.map(func(rtl): rtl.text = "")
-	for index in choices.size():
-		choice_texts[index].text = choices[index].get_text()
+	Global.current_swipeable = self
+	if story.GetCanContinue():
+		
+		text = story.ContinueMaximally()
+		rtl_story_text.text = text
+		story.GetCurrentChoices().map(
+			func(ink_choice : InkChoice):
+				var choice : Choice = Choice.new()
+				choice.setup(story, ink_choice)
+				choices.append(choice))
+		choice_texts.map(func(rtl): rtl.text = "")
+		for index in choices.size():
+			choice_texts[index].text = choices[index].get_text()
+	else:
+		rtl_story_text.text = "done"
 
 func _process(delta: float) -> void:
 	if is_dragging:
@@ -61,6 +66,8 @@ func swipe_right():
 	if choices.size() > 0:
 		choices[0].choose()
 		die()
+	else:
+		Global.goto_main_menu()
 	
 func _on_button_button_down() -> void:
 	start_drag()

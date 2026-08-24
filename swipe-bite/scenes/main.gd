@@ -14,7 +14,11 @@ var stats_dict = {}
 
 func _ready() -> void:
 	Global.main = self
-	
+	#setup()
+
+func setup():
+	hbox_stats.get_children().map(func(x): x.queue_free())
+	story.ResetState()
 	stat_names.map(func(stat_name): 
 		var stat_ui : StatUI = stat_ui_scene.instantiate()
 		hbox_stats.add_child(stat_ui)
@@ -24,6 +28,7 @@ func _ready() -> void:
 		)
 		
 	continue_story()
+	pass
 
 func continue_story():
 	next_swipeable()
