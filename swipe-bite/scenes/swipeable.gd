@@ -58,8 +58,9 @@ func swipe_left():
 		die()
 
 func swipe_right():
-	choices[0].choose()
-	die()
+	if choices.size() > 0:
+		choices[0].choose()
+		die()
 	
 func _on_button_button_down() -> void:
 	start_drag()
