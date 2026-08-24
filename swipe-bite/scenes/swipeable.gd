@@ -13,13 +13,17 @@ var choices : Array[Choice]
 var card_target_pos : Vector2 = Vector2.ZERO
 var pos_smoothing_factor : float = 0.25
 
-func setup(story : InkStory):
+func setup(story : InkPlayer):
 	Global.current_swipeable = self
-	if story.GetCanContinue():
+	if story.get_can_continue():
 		
-		text = story.ContinueMaximally()
+		text = story.continue_story_maximally()
+		#text = story.continue_story()
+		#text = story.get_current_text()
+		
+		story.get_current_tags().map(func(line): text += "\n" + str(line))
 		rtl_story_text.text = text
-		story.GetCurrentChoices().map(
+		story.get_current_choices().map(
 			func(ink_choice : InkChoice):
 				var choice : Choice = Choice.new()
 				choice.setup(story, ink_choice)
@@ -67,6 +71,9 @@ func swipe_right():
 		choices[0].choose()
 		die()
 	else:
+		#if Global.main.story.get_can_continue():
+			#Global.main.continue_story()
+			#die()
 		Global.goto_main_menu()
 	
 func _on_button_button_down() -> void:

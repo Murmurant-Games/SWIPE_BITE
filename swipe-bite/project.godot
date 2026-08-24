@@ -10,13 +10,14 @@ config_version=5
 
 [application]
 
-config/name="swipe-bite"
+config/name="SwipeBite"
 run/main_scene="uid://q32xx74prj6g"
-config/features=PackedStringArray("4.7", "C#", "GL Compatibility")
+config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [autoload]
 
+__InkRuntime="*uid://bg3qi740b6sjm"
 Global="*uid://bfs87g12xbclg"
 Utils="*uid://cm8t8nfl7fuwk"
 
@@ -25,17 +26,13 @@ Utils="*uid://cm8t8nfl7fuwk"
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
-[dotnet]
-
-project/assembly_name="swipe-bite"
-
-[editor]
-
-movie_writer/movie_file="C:/Users/Rena/Documents/Godot 4 Projects/SwipeBite/swipe-bite/a.avi"
-
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/GodotInk/plugin.cfg")
+enabled=PackedStringArray("res://addons/inkgd/plugin.cfg")
+
+[inkgd]
+
+register_templates=true
 
 [physics]
 

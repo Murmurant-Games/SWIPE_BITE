@@ -1,0 +1,15 @@
+[remap]
+
+importer="inkgd.ink.json"
+type="Resource"
+uid="uid://dqdv1eu06jvm5"
+path="res://.godot/imported/swipe_bite_start.json-a8820ab7fbabc08240bcf3644b970dff.res"
+
+[deps]
+
+source_file="res://story/swipe_bite_start.json"
+dest_files=["res://.godot/imported/swipe_bite_start.json-a8820ab7fbabc08240bcf3644b970dff.res"]
+
+[params]
+
+compress=true
