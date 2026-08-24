@@ -100,3 +100,6 @@ func int_to_mins_and_secs_str(secs) -> String:
 		remainder = str(remainder)
 	var result : String = str(mins) + ":" + remainder
 	return result
+
+func free_children(node : Node):
+	node.get_children().map(func(x): x.queue_free())

@@ -3,24 +3,29 @@ extends Control
 class_name Main
 
 var swipeable_scene = preload("uid://burecohv2qxav")
-
+var card_scene = preload("uid://cey26of3178o0")
 var stat_ui_scene = preload("uid://bb4g0ohqgsw1q")
 
 var stat_names = ["hunger", "humanity", "heat", "nights_lasted"]
 var stats_dict = {}
+var cards = []
 
 @onready var story : InkPlayer = $InkPlayer
 @onready var hbox_stats: HBoxContainer = $PanelContainer/hboxStats
+@onready var hbox_cards: HBoxContainer = $pnlCards/hboxCards
 
 
 func _ready() -> void:
 	story.connect("loaded", on_story_loaded)
 	story.create_story()
+	
 	Global.main = self
 
 func on_story_loaded(successfully : bool):
 	if !successfully:
 		print("Failed to laod story")
+		
+	print(story.get_variable("cards"))
 
 func setup():
 	hbox_stats.get_children().map(func(x): x.queue_free())
@@ -41,6 +46,21 @@ func setup():
 
 func continue_story():
 	next_swipeable()
+	
+	var last_size = cards.size()
+	var new_cards = story.get_variable("cards")
+	
+	Utils.free_children(hbox_cards)
+	new_cards = new_cards.keys()
+	new_cards.reverse()
+	new_cards.map(func(card_name):
+		var card : Card = card_scene.instantiate()
+		hbox_cards.add_child(card)
+		card.setup(card_name)
+		)
+	
+	cards = new_cards
+	
 	
 func next_swipeable():
 	var swipeable : Swipeable = swipeable_scene.instantiate()
