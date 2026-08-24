@@ -6,7 +6,7 @@ var swipeable_scene = preload("uid://burecohv2qxav")
 
 var stat_ui_scene = preload("uid://bb4g0ohqgsw1q")
 
-var stat_names = ["hunger", "humanity", "heat", "health", "sanity", "security", "nights_lasted"]
+var stat_names = ["hunger", "humanity", "heat", "nights_lasted"]
 var stats_dict = {}
 
 @onready var story : InkPlayer = $InkPlayer
