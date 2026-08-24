@@ -65,7 +65,9 @@ And your curious tongue pricked by the thorn that pushed through the gape.
 + [continue]
 -
 That's when you knew you weren't human anymore.
-+ [continue]
+What are you?
++ Human
++ Vampire
 -
 ->->
 
@@ -126,7 +128,7 @@ NEXT:
 ->stat_display
         
 == stat_display ==
-NIGHT: {nights_lasted} CARDS SEEN: {cards_seen}
+NIGHT: {nights_lasted} CARDS SEEN: {cards_seen} #DN_print
 ... HUNGER: {hunger} HEAT: {heat} HUMANITY: {humanity} #DN_print
 
 -> random_encounter
@@ -135,32 +137,36 @@ NIGHT: {nights_lasted} CARDS SEEN: {cards_seen}
 == dawn_comes
 
 ~ nights_lasted ++
-INCREASE COUNTER, RESET DECK # DN_print
+NIGHT ENDS. INCREASE COUNTER, RESET DECK #DN_print
 
-
-
-~ cards += (douche, normie, cheater, hunter, innocent,gym_bro)
-
-{hunters_avoided:
+{  nights_lasted:
     - 1:
-        ~ cards += (another_hunter)
-    - 2:
-        ~ cards += (another_hunter, experienced_hunter)
-}
+        ~ cards += (douche, normie, cheater, gym_bro)
+    
+    -2:
+        ~ cards += (douche, normie, cheater, hunter, innocent, gym_bro, cryptid, former_flame)
+    
+        {hunters_avoided:
+            - 1:
+                ~ cards += (another_hunter)
+            }
+    }
 
 //, cryptid, vampire, (goth), former_flame, ghost, your_sire, detective, mortal_lover
 
 -> win_lose_check
 
 == encounter_happens ==
-YOU HAVE AN ENCOUNTER.
+YOU HAVE AN ENCOUNTER. # DN_print
 -> stat_display
 
 
 == choose_character 
 Choose Vampire:
     + Basic
-    + Siren (+1 Feed / +1 Heat)
-    + Unavailable
+    + {heat_ending}Fatal Siren //(+1 Feed / +1 Heat)
+    + {hunger_ending}Damned Searcher
+    + {survival_ending}Young Sire
+    + {humanity_ending}Ancient Horror
     -
 ->->
