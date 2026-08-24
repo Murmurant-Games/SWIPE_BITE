@@ -9,6 +9,7 @@
             - else:
                 ~ alter(hunger,1)
                 }
+            
         -innocent:
             {feed:
                 ~ alter(hunger,-1)
@@ -117,4 +118,5 @@
                 }
                 
     }
+    ->print_outcome(character, feed)->
     ->->
