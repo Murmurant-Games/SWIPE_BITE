@@ -32,6 +32,7 @@ VAR cards_seen = 0
 GAME OPENING SCREEN etc.
  //❀ ⚸  👁 ❣🩸 ⚗ ⚱ N
 ->intro->
+
 ->play_menu
 
 == play_menu
@@ -40,8 +41,8 @@ Play throughs: {endings_reached}
 {endings_reached:->choose_character->}
 
 
-+ Play Game
-+ LOCK RANDOMISER
++ [Play Game]
++ [LOCK RANDOMISER]
     ~ SEED_RANDOM(235)
 -
 
@@ -139,6 +140,10 @@ NIGHT: {nights_lasted} CARDS SEEN: {cards_seen} #DN_print
 ~ nights_lasted ++
 NIGHT ENDS. INCREASE COUNTER, RESET DECK #DN_print
 
+A night ends.
++ [Another begins]
+-
+
 {  nights_lasted:
     - 1:
         ~ cards += (douche, normie, cheater, gym_bro)
@@ -163,7 +168,7 @@ YOU HAVE AN ENCOUNTER. # DN_print
 
 == choose_character 
 Choose Vampire:
-    + Basic
+    + Newly Turned
     + {heat_ending}Fatal Siren //(+1 Feed / +1 Heat)
     + {hunger_ending}Damned Searcher
     + {survival_ending}Young Sire
