@@ -3,6 +3,8 @@ INCLUDE swipe_bite_syn.ink
 INCLUDE swipe_bite_variables.ink
 INCLUDE swipe_bite_card_effects.ink
 INCLUDE swipe_bite_endings.ink
+INCLUDE swipe_bite_outcomes.ink
+
 
 
 
@@ -68,7 +70,8 @@ Memories of that night twist like sweat-soaked sheets. Flashes of acid clarity c
     Standing, holding the unrooted tooth that had fallen past your lips, pushed by a curious tongue that was then pricked by the gleaming fang that pushed through the gape.
 -
 
-+ [continue]
+->continue->
+
 -
 That's when you knew you weren't human anymore.
 What are you?
@@ -182,7 +185,7 @@ YOU HAVE AN ENCOUNTER. # DN_print
 
 
 == choose_character 
-Choose Vampire:
+Choose Archetype:
     + [Newly Turned]
     + [{heat_ending}Fatal Siren] //(+1 Feed / +1 Heat)
     //+ [{hunger_ending}Damned Searcher]
