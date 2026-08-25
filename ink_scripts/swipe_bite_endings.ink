@@ -1,6 +1,6 @@
 
 == heat_ending
-You have drawn too much attention. Hunters gather, the police investigate.
+You have drawn too much attention. Hunters close in, the police investigate the disappearances.
 But it's the other vampires that get to you first.
 
 -> EndDemo
@@ -16,7 +16,9 @@ What is dead cannot die. But it can stop moving. Except for when the wind stirs 
 -> EndDemo
 
 == hunger_ending
+The hunger is not endless. There comes a point when you defeat it.
 The cold closes in and you start to tremble, something you haven't done since you turned. Perhaps this is a kind of victory, holding on to your humanity to the end.
+You die human.
 
 -> EndDemo
 
@@ -33,4 +35,4 @@ You lasted 10 days... survival is all that matters and you are a survivor.
  
 THE END
 
-->start
+->play_menu
