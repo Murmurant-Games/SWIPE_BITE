@@ -70,3 +70,8 @@ func next_swipeable():
 func on_var_change(var_name : String, value):
 	stats_dict[var_name].on_value_changed(value)
 		
+
+
+func _on_btn_rest_pressed() -> void:
+	Global.current_swipeable.queue_free()
+	setup()
