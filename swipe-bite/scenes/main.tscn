@@ -50,3 +50,13 @@ layout_mode = 2
 
 [node name="Card" parent="pnlCards/hboxCards" unique_id=559367489 instance=ExtResource("4_jyhfs")]
 layout_mode = 2
+
+[node name="btnRest" type="Button" parent="." unique_id=2024865200]
+layout_mode = 0
+offset_left = 1048.0
+offset_top = 524.0
+offset_right = 1149.0
+offset_bottom = 581.0
+text = "RESET"
+
+[connection signal="pressed" from="btnRest" to="." method="_on_btn_rest_pressed"]
