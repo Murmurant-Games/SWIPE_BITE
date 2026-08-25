@@ -29,14 +29,14 @@ VAR cards_seen = 0
 -> start
 
 == start ==
-GAME OPENING SCREEN etc.
+GAME OPENING SCREEN etc. #DN_print
  //❀ ⚸  👁 ❣🩸 ⚗ ⚱ N
 ->intro->
 
 ->play_menu
 
 == play_menu
-Play throughs: {endings_reached}
+Play throughs: {endings_reached} #DN_print
 
 {endings_reached:->choose_character->}
 
@@ -49,45 +49,50 @@ Play throughs: {endings_reached}
 ~ hunger = 5
 ~ humanity = 10
 ~ heat = 0
+~ nights_lasted = 0
 
 
-The Night Begins... Your first...
-    -> random_encounter
+    -> begin_end_cycle
 
 == intro
-Memories of that night twist like sweat-soaked sheets. Flashes of acid clarity clashing with impossible visions. Shuddering under a scalding shower desperate to get warm. Bolting down raw meat, insatiably hungry.
-+ [continue]
+Memories of that night twist like sweat-soaked sheets. Flashes of acid clarity clashing with impossible visions.
++ [The cold]
+    Shuddering under a scalding shower desperate to get warm. 
++ [The hunger]
+    Bolting down raw meat, insatiably hungry.
 -
-And the teeth.
-+ [continue]
+    The horror of yourself in the mirror.
++ [Your teeth]
+    Standing, holding the unrooted tooth that had fallen past your lips, pushed by a curious tongue that was then pricked by the gleaming fang that pushed through the gape.
++ [Your eyes]
+    Standing, holding the unrooted tooth that had fallen past your lips, pushed by a curious tongue that was then pricked by the gleaming fang that pushed through the gape.
 -
-Standing in front of the mirror horrified and holding the tooth that had fallen past your lips, pushed by a curious tongue.
-And your curious tongue pricked by the thorn that pushed through the gape.
+
 + [continue]
 -
 That's when you knew you weren't human anymore.
 What are you?
-+ Human
-+ Vampire
++ [I'm human]
++ [I'm a vampire]
 -
 ->->
 
 
 === random_encounter ===
+//The Night Begins.
 
-{LIST_COUNT(cards) == 0: -> dawn_comes}
+{LIST_COUNT(cards) == 0: -> begin_end_cycle}
 
 ~ temp who = ()
 
 ~ deal(who, cards)
 
 
-NEXT:
 ->print_bio(who)->
 ~ cards_seen ++
-+ FEED / FACE: {who} //RETURN TRUE
++ [FEED / FACE: {who}] //RETURN TRUE
     -> alter_stat(who,true)->
-+ SPARE / AVOID: {who} //RETURN FALSE
++ [SPARE / AVOID: {who}] //RETURN FALSE
     -> alter_stat(who,false)->
 -
 -> win_lose_check
@@ -135,13 +140,13 @@ NIGHT: {nights_lasted} CARDS SEEN: {cards_seen} #DN_print
 -> random_encounter
 
 
-== dawn_comes
+== begin_end_cycle
 
 ~ nights_lasted ++
-NIGHT ENDS. INCREASE COUNTER, RESET DECK #DN_print
+//NIGHT ENDS. INCREASE COUNTER, RESET DECK #DN_print
 
-A night ends.
-+ [Another begins]
+//A night ends.
+//+ [Another begins]
 -
 
 {  nights_lasted:
@@ -154,6 +159,16 @@ A night ends.
         {hunters_avoided:
             - 1:
                 ~ cards += (another_hunter)
+            }
+            
+    -3:
+        ~ cards += (douche, normie, cheater, hunter, innocent, goth, gym_bro, cryptid, former_flame)
+    
+        {hunters_avoided:
+            - 1:
+                ~ cards += (another_hunter)
+            - 2:
+                ~ cards += (another_hunter,experienced_hunter)
             }
     }
 
@@ -168,10 +183,10 @@ YOU HAVE AN ENCOUNTER. # DN_print
 
 == choose_character 
 Choose Vampire:
-    + Newly Turned
-    + {heat_ending}Fatal Siren //(+1 Feed / +1 Heat)
-    + {hunger_ending}Damned Searcher
-    + {survival_ending}Young Sire
-    + {humanity_ending}Ancient Horror
+    + [Newly Turned]
+    + [{heat_ending}Fatal Siren] //(+1 Feed / +1 Heat)
+    //+ [{hunger_ending}Damned Searcher]
+    //+ [{survival_ending}Young Sire]
+    //+ [{humanity_ending}Ancient Horror]
     -
 ->->
