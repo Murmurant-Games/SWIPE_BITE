@@ -11,6 +11,7 @@ func setup(_story : InkPlayer, _ink_choice : InkChoice):
 	
 func choose():
 	story.choose_choice_index(ink_choice.index)
+	print(story.get_current_text())
 	#story.ChooseChoiceIndex(ink_choice.GetIndex())
 	Global.main.continue_story()
 

@@ -51,6 +51,14 @@ layout_mode = 2
 [node name="Card" parent="pnlCards/hboxCards" unique_id=559367489 instance=ExtResource("4_jyhfs")]
 layout_mode = 2
 
+[node name="ctrlSwipeable" type="Control" parent="." unique_id=832778526]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
 [node name="btnRest" type="Button" parent="." unique_id=2024865200]
 layout_mode = 0
 offset_left = 1048.0

@@ -13,6 +13,7 @@ var cards = []
 @onready var story : InkPlayer = $InkPlayer
 @onready var hbox_stats: HBoxContainer = $PanelContainer/hboxStats
 @onready var hbox_cards: HBoxContainer = $pnlCards/hboxCards
+@onready var ctrl_swipeable: Control = $ctrlSwipeable
 
 
 func _ready() -> void:
@@ -64,13 +65,12 @@ func continue_story():
 	
 func next_swipeable():
 	var swipeable : Swipeable = swipeable_scene.instantiate()
-	add_child(swipeable)
+	ctrl_swipeable.add_child(swipeable)
 	swipeable.setup(story)
 
 func on_var_change(var_name : String, value):
 	stats_dict[var_name].on_value_changed(value)
 		
-
 
 func _on_btn_rest_pressed() -> void:
 	Global.current_swipeable.queue_free()

@@ -73,7 +73,7 @@ func text_without_tags(_text : String) -> String:
 func await_char(_text, _text_index):
 	if (_text_index - 1 >= 0):
 		var char = _text[_text_index - 1]
-		var wait_time = 0
+		var wait_time = 0.01 / (Global.text_speed / 100)
 		match char:
 			"," : wait_time = 0.3  / (Global.text_speed / 100)
 			"." : wait_time = 0.5 / (Global.text_speed / 100)

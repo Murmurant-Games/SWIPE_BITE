@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://burecohv2qxav"]
 
 [ext_resource type="Script" uid="uid://1uk0batu6gp6" path="res://scenes/swipeable.gd" id="1_ujlfe"]
+[ext_resource type="Texture2D" uid="uid://dfdnaqkhqai8c" path="res://art/portraits/cabal_good.png" id="2_801ac"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ujlfe"]
 content_margin_left = 8.0
@@ -28,6 +29,42 @@ tracks/0/keys = {
 "update": 1,
 "values": [-150.0]
 }
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("rtlLeft:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(250, -20)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("rtlRight:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(-500, -20)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("rtlUp:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(-125, -400)]
+}
 
 [sub_resource type="Animation" id="Animation_801ac"]
 resource_name = "show"
@@ -45,10 +82,50 @@ tracks/0/keys = {
 "values": [400.0, -150.0]
 }
 
+[sub_resource type="Animation" id="Animation_gdr0j"]
+resource_name = "show_choices"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("rtlLeft:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.23333333, 0.6666667),
+"transitions": PackedFloat32Array(0.21022414, 0.21022414),
+"update": 0,
+"values": [Vector2(500, -20), Vector2(250, -20)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("rtlRight:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.1, 0.46666667),
+"transitions": PackedFloat32Array(0.18301074, 0.18301074),
+"update": 0,
+"values": [Vector2(-700, -20), Vector2(-500, -20)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("rtlUp:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(0.21763763, 0.21763763),
+"update": 0,
+"values": [Vector2(-125, -375), Vector2(-125, -275)]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_gdr0j"]
 _data = {
 &"RESET": SubResource("Animation_ujlfe"),
-&"show": SubResource("Animation_801ac")
+&"show": SubResource("Animation_801ac"),
+&"show_choices": SubResource("Animation_gdr0j")
 }
 
 [node name="Swipeable" type="Control" unique_id=1155580600]
@@ -64,18 +141,31 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 script = ExtResource("1_ujlfe")
 
+[node name="btnSkip" type="Button" parent="." unique_id=291259645]
+self_modulate = Color(1, 1, 1, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -580.0
+offset_top = -345.0
+offset_right = 588.0
+offset_bottom = 344.0
+grow_horizontal = 2
+grow_vertical = 2
+
 [node name="pnlCard" type="PanelContainer" parent="." unique_id=2007881664]
-custom_minimum_size = Vector2(200, 300)
+custom_minimum_size = Vector2(250, 400)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -100.0
+offset_left = -125.0
 offset_top = -150.0
-offset_right = 100.0
-offset_bottom = 150.00006
+offset_right = 125.0
+offset_bottom = 262.99997
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(100, 300)
@@ -84,15 +174,39 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_ujlfe")
 [node name="Control" type="Control" parent="pnlCard" unique_id=1316311153]
 layout_mode = 2
 
-[node name="rtlStoryText" type="RichTextLabel" parent="pnlCard/Control" unique_id=1909863562]
+[node name="VBoxContainer" type="VBoxContainer" parent="pnlCard/Control" unique_id=81961996]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="lblTitle" type="Label" parent="pnlCard/Control/VBoxContainer" unique_id=299447842]
+layout_mode = 2
+theme_override_constants/outline_size = 12
+theme_override_font_sizes/font_size = 32
+text = "Title"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="pnlPic" type="PanelContainer" parent="pnlCard/Control/VBoxContainer" unique_id=1275081791]
+custom_minimum_size = Vector2(100, 200)
+layout_mode = 2
+
+[node name="trectPortrait" type="TextureRect" parent="pnlCard/Control/VBoxContainer/pnlPic" unique_id=1155885482]
+texture_filter = 1
+layout_mode = 2
+texture = ExtResource("2_801ac")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="rtlStoryText" type="RichTextLabel" parent="pnlCard/Control/VBoxContainer" unique_id=1909863562]
+layout_mode = 2
+size_flags_vertical = 3
 bbcode_enabled = true
 text = "asdasdasd"
+horizontal_alignment = 1
 
 [node name="Button" type="Button" parent="pnlCard" unique_id=115616721]
 self_modulate = Color(1, 1, 1, 0)
@@ -105,7 +219,7 @@ anchor_top = 0.5
 anchor_bottom = 0.5
 offset_left = 250.0
 offset_top = -20.0
-offset_right = 500.0
+offset_right = 499.99982
 offset_bottom = 20.0
 grow_vertical = 2
 bbcode_enabled = true
@@ -128,9 +242,27 @@ grow_vertical = 2
 bbcode_enabled = true
 text = "Right"
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=640789019]
+[node name="rtlUp" type="RichTextLabel" parent="." unique_id=1923106442]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -125.0
+offset_top = -400.0
+offset_right = 125.0
+offset_bottom = -360.0
+grow_horizontal = 0
+grow_vertical = 2
+bbcode_enabled = true
+text = "Up"
+horizontal_alignment = 1
+
+[node name="animPlayer" type="AnimationPlayer" parent="." unique_id=640789019]
 libraries/ = SubResource("AnimationLibrary_gdr0j")
 autoplay = &"show"
 
+[connection signal="button_down" from="btnSkip" to="." method="_on_btn_skip_button_down"]
 [connection signal="button_down" from="pnlCard/Button" to="." method="_on_button_button_down"]
 [connection signal="button_up" from="pnlCard/Button" to="." method="_on_button_button_up"]

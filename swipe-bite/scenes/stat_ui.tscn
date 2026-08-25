@@ -2,10 +2,72 @@
 
 [ext_resource type="Script" uid="uid://buncttsr2u0kh" path="res://scenes/stat_ui.gd" id="1_tqlgq"]
 
+[sub_resource type="Animation" id="Animation_tqlgq"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_5m7h0"]
+resource_name = "throb"
+length = 2.5000000000000004
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 2.5),
+"transitions": PackedFloat32Array(1.9318736, 1.9318736),
+"update": 0,
+"values": [Color(2.7075353, 0, 0, 1), Color(1, 1, 1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 2.5),
+"transitions": PackedFloat32Array(1.9318736, 1.9318736),
+"update": 0,
+"values": [Vector2(1.2, 1.2), Vector2(1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_xo5vc"]
+_data = {
+&"RESET": SubResource("Animation_tqlgq"),
+&"throb": SubResource("Animation_5m7h0")
+}
+
 [node name="StatUI" type="VBoxContainer" unique_id=333489683]
 custom_minimum_size = Vector2(128, 60)
 offset_right = 128.0
 offset_bottom = 60.0
+pivot_offset = Vector2(64, 0)
 size_flags_horizontal = 4
 script = ExtResource("1_tqlgq")
 
@@ -20,4 +82,18 @@ horizontal_alignment = 1
 layout_mode = 2
 size_flags_vertical = 3
 text = "Value"
+horizontal_alignment = 1
+
+[node name="animPlayer" type="AnimationPlayer" parent="." unique_id=583021048]
+libraries/ = SubResource("AnimationLibrary_xo5vc")
+
+[node name="Control" type="Control" parent="." unique_id=772200282]
+layout_mode = 2
+
+[node name="rtlPrior" type="RichTextLabel" parent="Control" unique_id=946467116]
+layout_mode = 0
+offset_left = -1.0
+offset_top = 1.0
+offset_right = 132.0
+offset_bottom = 59.0
 horizontal_alignment = 1
