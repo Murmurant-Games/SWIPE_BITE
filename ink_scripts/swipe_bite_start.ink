@@ -30,14 +30,14 @@ VAR cards_seen = 0
 -> start
 
 == start ==
-GAME OPENING SCREEN etc. #DN_print
+//GAME OPENING SCREEN etc. #DN_print
  //❀ ⚸  👁 ❣🩸 ⚗ ⚱ N
 ->intro->
 
 ->play_menu
 
 == play_menu
-Play throughs: {endings_reached} #DN_print
+//Play throughs: {endings_reached} #DN_print
 
 {endings_reached:->choose_character->}
 

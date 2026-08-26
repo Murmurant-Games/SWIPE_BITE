@@ -10,9 +10,9 @@
     {heat > 10:
         -> heat_ending
         }
-    {health < 0:
-        -> death_ending
-        }
+    //{health < 0:
+        //-> death_ending
+        //}
     {nights_lasted >= 20:
         -> survival_ending
         }
@@ -42,7 +42,7 @@ NIGHT: {nights_lasted} CARDS SEEN: {cards_seen} #DN_print
 
 -> random_encounter
 */
-
+-> random_encounter
 
 == begin_end_cycle
 
