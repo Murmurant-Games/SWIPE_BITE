@@ -4,8 +4,7 @@ INCLUDE swipe_bite_variables.ink
 INCLUDE swipe_bite_card_effects.ink
 INCLUDE swipe_bite_endings.ink
 INCLUDE swipe_bite_outcomes.ink
-
-
+INCLUDE swipe_bite_cycles.ink
 
 
 VAR hunger = 5
@@ -44,8 +43,8 @@ Play throughs: {endings_reached} #DN_print
 
 
 + [Play Game]
-+ [LOCK RANDOMISER]
-    ~ SEED_RANDOM(235)
+//+ [LOCK RANDOMISER]
+    //~ SEED_RANDOM(235)
 -
 
 ~ hunger = 5
@@ -92,104 +91,29 @@ What are you?
 
 
 ->print_bio(who)->
+
 ~ cards_seen ++
-+ [FEED / FACE: {who}] //RETURN TRUE
+
++ [FEED / FACE:] //RETURN TRUE
     -> alter_stat(who,true)->
-+ [SPARE / AVOID: {who}] //RETURN FALSE
+    
+    //-> outcomes(who,true)->
++ [SPARE / AVOID:] //RETURN FALSE
     -> alter_stat(who,false)->
+    
+    //-> outcomes(who,false)->
 -
 -> win_lose_check
-
-
-== win_lose_check
-    {hunger > 10:
-        -> hunger_ending
-        }
-    {humanity < 0:
-        -> humanity_ending
-        }
-    {heat > 10:
-        -> heat_ending
-        }
-    {health < 0:
-        -> death_ending
-        }
-    {nights_lasted >= 20:
-        -> survival_ending
-        }
--> stat_adjust
-
-
-== stat_adjust
-    {hunger < 0:
-        ~ hunger = 0
-        }
-    {humanity > 10:
-        ~ humanity = 10
-        }
-    {heat < 0:
-        ~ heat = 0
-        }
-    {health > 10:
-        ~ health = 10
-        }
-
-->stat_display
-        
-== stat_display ==
-NIGHT: {nights_lasted} CARDS SEEN: {cards_seen} #DN_print
-... HUNGER: {hunger} HEAT: {heat} HUMANITY: {humanity} #DN_print
-
--> random_encounter
-
-
-== begin_end_cycle
-
-~ nights_lasted ++
-//NIGHT ENDS. INCREASE COUNTER, RESET DECK #DN_print
-
-//A night ends.
-//+ [Another begins]
--
-
-{  nights_lasted:
-    - 1:
-        ~ cards += (douche, normie, cheater, gym_bro)
-    
-    -2:
-        ~ cards += (douche, normie, cheater, hunter, innocent, gym_bro, cryptid, former_flame)
-    
-        {hunters_avoided:
-            - 1:
-                ~ cards += (another_hunter)
-            }
-            
-    -3:
-        ~ cards += (douche, normie, cheater, hunter, innocent, goth, gym_bro, cryptid, former_flame)
-    
-        {hunters_avoided:
-            - 1:
-                ~ cards += (another_hunter)
-            - 2:
-                ~ cards += (another_hunter,experienced_hunter)
-            }
-    }
-
-//, cryptid, vampire, (goth), former_flame, ghost, your_sire, detective, mortal_lover
-
--> win_lose_check
-
-== encounter_happens ==
-YOU HAVE AN ENCOUNTER. # DN_print
--> stat_display
 
 
 == choose_character 
-Choose Archetype:
+What are you?
     + [Newly Turned]
-    + [{heat_ending}Fatal Siren] //(+1 Feed / +1 Heat)
-    //+ [{hunger_ending}Damned Searcher]
-    //+ [{survival_ending}Young Sire]
-    //+ [{humanity_ending}Ancient Horror]
+    + {heat_ending}[Fatal Siren] //(+1 Feed / +1 Heat) More Heat = More Power
+    //+ {hunger_ending}[Damned Searcher] // Find a Cure
+    //+ {survival_ending}[Young Sire] // Rise in Vampire Society
+    //+ {humanity_ending}[Ancient Horror] // FEED & SLUMBER
+    //+ {hunter_ending}[Apex Predator] 
+        // Hunter of Hunters
     -
 ->->

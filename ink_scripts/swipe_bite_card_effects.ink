@@ -118,5 +118,5 @@
                 }
                 
     }
-    ->print_outcome(character, feed)->
+    
     ->->

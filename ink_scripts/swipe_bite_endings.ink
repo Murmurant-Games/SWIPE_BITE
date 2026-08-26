@@ -24,7 +24,7 @@ You die human.
 
 == survival_ending
 
-You lasted 10 days... survival is all that matters and you are a survivor.
+You lasted {nights_lasted} nights... survival is all that matters and you are a survivor.
 ->continue->
 -> EndDemo
 

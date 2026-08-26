@@ -1,5 +1,5 @@
 
-=== print_outcome(character, feed) ===
+=== outcomes(character, feed) ===
 { character:
         -normie:
             {feed:
@@ -7,6 +7,7 @@
             - else:
                 Let him live ignorant of the excitement that would have killed him.
                 }
+            
         -innocent:
             {feed:
                 She's enchanting. Immune to your glamour, she unmasks your pain.
@@ -18,7 +19,7 @@
             {feed:
                 He wasn't ready for your speed. But his holy water melted the skin from your arm.
             - else:
-                You avoided the hunter... but he won't give up the trail.
+                You avoided the hunter... but he won't give up your trail.
                 }
                 
         -another_hunter:
@@ -85,7 +86,7 @@
                 }
         
     }
-
+    
     ->continue->
     ->->
     
@@ -95,3 +96,23 @@
     + [CONTINUE]
     -
     ->->
+
+== react_to_outcome(who)
+
++ [FEED / FACE:] //RETURN TRUE
+    //-> alter_stat(who,true)->
+    
++ [SPARE / AVOID:] //RETURN FALSE
+    //-> alter_stat(who,false)->
+-    
+->->
+
+== create_thrall
+
++ [ENTHRALL] //RETURN TRUE
+    
+    
++ [FEED] //RETURN FALSE
+    //-> alter_stat(who,false)->
+-    
+->->
