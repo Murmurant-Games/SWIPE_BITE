@@ -195,6 +195,7 @@ custom_minimum_size = Vector2(100, 200)
 layout_mode = 2
 
 [node name="trectPortrait" type="TextureRect" parent="pnlCard/Control/VBoxContainer/pnlPic" unique_id=1155885482]
+self_modulate = Color(18.892157, 0, 0, 1)
 texture_filter = 1
 layout_mode = 2
 texture = ExtResource("2_801ac")

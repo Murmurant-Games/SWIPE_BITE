@@ -11,11 +11,11 @@ class_name Swipeable
 @onready var trect_portrait: TextureRect = $pnlCard/Control/VBoxContainer/pnlPic/trectPortrait
 @onready var anim_player: AnimationPlayer = $animPlayer
 
-var portraits = [	preload("uid://d0aqgef4xhl2l"),
-					#preload("uid://dfdnaqkhqai8c"),
-					#preload("uid://jh2qwycs2rd"),
-					#preload("uid://djddjnv5hjxb3"),
-					#preload("uid://dv77bhn6jpk66")
+var portraits = [	#preload("uid://d0aqgef4xhl2l"),
+					preload("uid://dfdnaqkhqai8c"),
+					preload("uid://jh2qwycs2rd"),
+					preload("uid://djddjnv5hjxb3"),
+					preload("uid://dv77bhn6jpk66")
 					]
 
 var is_dragging : bool = false
