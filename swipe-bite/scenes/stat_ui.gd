@@ -25,7 +25,12 @@ func on_value_changed(new_value):
 	update()
 
 func update():
-	rtl_value.text = str(value)
+	if stat_name.to_lower() == "hunger":
+		rtl_name.text = Global.main.get_hunger_bbcode() + str(stat_name)
+		rtl_value.text = Global.main.get_hunger_bbcode() + str(value)
+	else:
+		rtl_value.text = str(value)
+	
 	var diff = abs(value - prior_value)
 	if diff != 0:
 		if value > prior_value:

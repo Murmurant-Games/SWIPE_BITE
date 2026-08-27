@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://bglsn3l1uupb2"
+path="res://.godot/imported/juanjo_ sound - elevated.ogg-f0ce4704efe3b74282bd26a23839d286.oggvorbisstr"
+
+[deps]
+
+source_file="res://sound/music/juanjo_ sound - elevated.ogg"
+dest_files=["res://.godot/imported/juanjo_ sound - elevated.ogg-f0ce4704efe3b74282bd26a23839d286.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

@@ -6,16 +6,24 @@ class_name Swipeable
 @onready var pnl_card: PanelContainer = $pnlCard
 @onready var card_inital_pos : Vector2 = pnl_card.position
 @onready var choice_texts : Array[RichTextLabel] = [$rtlLeft, $rtlRight, $rtlUp]
-@onready var lbl_title: Label = $pnlCard/Control/VBoxContainer/lblTitle
+@onready var rtl_title: RichTextLabel = $pnlCard/Control/VBoxContainer/rtlTitle
 @onready var pnl_pic: PanelContainer = $pnlCard/Control/VBoxContainer/pnlPic
+@onready var rect_bg : ColorRect = $pnlCard/Control/VBoxContainer/pnlPic/trectPortrait/rectBG
+@onready var portrait_mat : ShaderMaterial = $pnlCard/Control/VBoxContainer/pnlPic/trectPortrait/rectBG.material
 @onready var trect_portrait: TextureRect = $pnlCard/Control/VBoxContainer/pnlPic/trectPortrait
 @onready var anim_player: AnimationPlayer = $animPlayer
+@onready var pnl_stylebox : StyleBoxFlat = $pnlCard.get_theme_stylebox("panel")
 
 var portraits = [	#preload("uid://d0aqgef4xhl2l"),
-					preload("uid://dfdnaqkhqai8c"),
-					preload("uid://jh2qwycs2rd"),
-					preload("uid://djddjnv5hjxb3"),
-					preload("uid://dv77bhn6jpk66")
+					#preload("uid://dfdnaqkhqai8c"),
+					#preload("uid://jh2qwycs2rd"),
+					#preload("uid://djddjnv5hjxb3"),
+					#preload("uid://dv77bhn6jpk66")
+					preload("uid://cqj6wnt6ja5wb"),
+					preload("uid://ltcuq17ipgf4"),
+					preload("uid://cjqom6l11jsf4"),
+					preload("uid://cqqjxidv2sjye")
+					
 					]
 
 var is_dragging : bool = false
@@ -23,6 +31,7 @@ var text = ""
 var choices : Array[Choice]
 var card_target_pos : Vector2 = Vector2.ZERO
 var pos_smoothing_factor : float = 0.25
+var tagless_text = ""
 
 func setup(story : InkPlayer):
 	Global.current_swipeable = self
@@ -35,15 +44,27 @@ func setup(story : InkPlayer):
 			txt = story.continue_story()
 			tags = story.get_current_tags().map(func(x): return str(x))
 		
+		txt = txt.replace("[br]", "\n")
 			
-		rtl_story_text.text =  txt
+		tagless_text = Utils.text_without_tags(txt)
+		rtl_story_text.text = Global.main.get_hunger_bbcode() + txt
 		
 		if tags.size() > 0:
-			lbl_title.text = tags[0]
+			rtl_title.text =  Global.main.get_hunger_bbcode() + tags[0]
+			rtl_title.text =  Global.main.get_hunger_bbcode() + Names.random_name()
 			pnl_pic.visible = true
-			trect_portrait.texture = portraits.pick_random()
+			rect_bg.self_modulate = Color(1, 1, 1, 1.0 - clampf((Utils.change_range(Global.main.get_humanity_delta(), 0.25, 0.75, 0, 1)), 0, 1))
+			portrait_mat.set_shader_parameter("colour_1", Color(randf(), randf(), randf()))
+			portrait_mat.set_shader_parameter("colour_2", Color(randf(), randf(), randf()))
+			portrait_mat.set_shader_parameter("colour_3", Color(0, 0, 0))
+			trect_portrait.texture = portraits.pick_random() 
+			trect_portrait.flip_h = randf() > 0.5
+			
+			pnl_stylebox.bg_color = Color(randf_range(0.1, 0.4), randf_range(0.1, 0.4), randf_range(0.1, 0.4))
+			
 		else:
-			lbl_title.visible = false
+			pnl_stylebox.bg_color = Color(0.1, 0.1, 0.1)
+			rtl_title.visible = false
 			pnl_pic.visible = false
 		
 		choice_texts.map(func(rtl): 
@@ -141,6 +162,7 @@ func skip():
 	if not all_text_visible:
 		rtl_story_text.visible_characters = rtl_story_text.text.length()
 		all_text_visible = true
+		anim_player.seek(1.0, true)
 		on_all_text_visible()
 
 func _on_button_button_up() -> void:
@@ -182,13 +204,13 @@ func should_skip(story, txt : String, tags) -> bool:
 var text_index = 0
 var all_text_visible = false
 func show_next_char():
-	if rtl_story_text.visible_characters == rtl_story_text.text.length():
+	if rtl_story_text.visible_characters == tagless_text.length():
 		if not all_text_visible:
 			all_text_visible = true
 			on_all_text_visible()
 		return
 	else:
-		await Utils.await_char(rtl_story_text.text, text_index)
+		await Utils.await_char(tagless_text, text_index)
 		if not all_text_visible:
 			text_index += 1
 			rtl_story_text.visible_characters = text_index

@@ -1,0 +1,21 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://hirc7vyjy7kn"]
+
+[ext_resource type="Shader" uid="uid://dghxkdclctlfa" path="res://scenes/portrait_bg_shader.gdshader" id="1_av7fk"]
+
+[resource]
+shader = ExtResource("1_av7fk")
+shader_parameter/spin_rotation_speed = 2.0
+shader_parameter/move_speed = 7.0
+shader_parameter/offset = Vector2(0, 0)
+shader_parameter/colour_1 = Color(0.5019608, 0.20100607, 0, 1)
+shader_parameter/colour_2 = Color(0.16631055, 1, 0, 1)
+shader_parameter/colour_3 = Color(0, 0, 0, 1)
+shader_parameter/contrast = 3.5
+shader_parameter/lighting = 0.4
+shader_parameter/spin_amount = 0.25
+shader_parameter/pixel_filter = 740.0
+shader_parameter/is_rotating = false
+shader_parameter/enabled = true
+shader_parameter/dithering = true
+shader_parameter/colors = 8
+shader_parameter/dither_size = 1

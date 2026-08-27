@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://bnajnp0gx33rq"
+path="res://.godot/imported/juanjo_ sound - continuum.ogg-ae6c5576a0b1f0c37dfa97d6abbea469.oggvorbisstr"
+
+[deps]
+
+source_file="res://sound/music/juanjo_ sound - continuum.ogg"
+dest_files=["res://.godot/imported/juanjo_ sound - continuum.ogg-ae6c5576a0b1f0c37dfa97d6abbea469.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

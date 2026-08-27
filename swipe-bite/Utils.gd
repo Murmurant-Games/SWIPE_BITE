@@ -103,3 +103,7 @@ func int_to_mins_and_secs_str(secs) -> String:
 
 func free_children(node : Node):
 	node.get_children().map(func(x): x.queue_free())
+
+func change_range(input, initial_range_start, initial_range_end, final_range_start, final_range_end) -> float:
+	return float(final_range_start + ((input - initial_range_start) * ((final_range_end - final_range_start) / (initial_range_end - initial_range_start))))
+	

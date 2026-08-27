@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://bta014buoyyh8"
+path="res://.godot/imported/juanjo_ sound - Pseudoliminality.ogg-a495631bc30cc4b8bd75e7c002f31bba.oggvorbisstr"
+
+[deps]
+
+source_file="res://sound/music/juanjo_ sound - Pseudoliminality.ogg"
+dest_files=["res://.godot/imported/juanjo_ sound - Pseudoliminality.ogg-a495631bc30cc4b8bd75e7c002f31bba.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

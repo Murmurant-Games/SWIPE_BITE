@@ -2,18 +2,39 @@
 
 [ext_resource type="Script" uid="uid://1uk0batu6gp6" path="res://scenes/swipeable.gd" id="1_ujlfe"]
 [ext_resource type="Texture2D" uid="uid://dfdnaqkhqai8c" path="res://art/portraits/cabal_good.png" id="2_801ac"]
+[ext_resource type="Material" uid="uid://hirc7vyjy7kn" path="res://scenes/portrat_bg_mat.tres" id="3_gdr0j"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ujlfe"]
 content_margin_left = 8.0
 content_margin_top = 8.0
 content_margin_right = 8.0
 content_margin_bottom = 8.0
-bg_color = Color(0.265625, 0.265625, 0.265625, 1)
+bg_color = Color(0.33984375, 0.33984375, 0.33984375, 1)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qqt24"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o1cif"]
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="Gradient" id="Gradient_gdr0j"]
+colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_o1cif"]
+gradient = SubResource("Gradient_gdr0j")
+fill_from = Vector2(0.5, 1)
+fill_to = Vector2(0.5, 0)
 
 [sub_resource type="Animation" id="Animation_ujlfe"]
 length = 0.001
@@ -65,10 +86,33 @@ tracks/3/keys = {
 "update": 0,
 "values": [Vector2(-125, -400)]
 }
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("pnlCard/Control/VBoxContainer/pnlPic/trectPortrait/rectBG:self_modulate")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("pnlCard/Control/VBoxContainer/pnlPic/PanelContainer/TextureRect:self_modulate")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
 
 [sub_resource type="Animation" id="Animation_801ac"]
 resource_name = "show"
-length = 0.5
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -76,10 +120,46 @@ tracks/0/path = NodePath("pnlCard:position:y")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.5),
-"transitions": PackedFloat32Array(0.16493845, 0.16493845),
+"times": PackedFloat32Array(0, 0.75),
+"transitions": PackedFloat32Array(0.16493845, 0.08246926),
 "update": 0,
 "values": [400.0, -150.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = false
+tracks/1/path = NodePath("pnlCard/Control/VBoxContainer/pnlPic/trectPortrait/rectBG:self_modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.3, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("pnlCard/Control/VBoxContainer/pnlPic/trectPortrait:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.6, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("pnlCard/Control/VBoxContainer/pnlPic/PanelContainer/TextureRect:self_modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0.2, 0.7),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
 }
 
 [sub_resource type="Animation" id="Animation_gdr0j"]
@@ -165,7 +245,7 @@ anchor_bottom = 0.5
 offset_left = -125.0
 offset_top = -150.0
 offset_right = 125.0
-offset_bottom = 262.99997
+offset_bottom = 262.99982
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(100, 300)
@@ -182,31 +262,58 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="lblTitle" type="Label" parent="pnlCard/Control/VBoxContainer" unique_id=299447842]
+[node name="rtlTitle" type="RichTextLabel" parent="pnlCard/Control/VBoxContainer" unique_id=1196702284]
+custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
-theme_override_constants/outline_size = 12
-theme_override_font_sizes/font_size = 32
-text = "Title"
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/normal_font_size = 26
+bbcode_enabled = true
+text = "Douche"
+fit_content = true
+scroll_active = false
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="pnlPic" type="PanelContainer" parent="pnlCard/Control/VBoxContainer" unique_id=1275081791]
 custom_minimum_size = Vector2(100, 200)
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_qqt24")
+
+[node name="PanelContainer" type="PanelContainer" parent="pnlCard/Control/VBoxContainer/pnlPic" unique_id=1635285163]
+clip_children = 1
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_o1cif")
+
+[node name="ColorRect" type="ColorRect" parent="pnlCard/Control/VBoxContainer/pnlPic/PanelContainer" unique_id=1812080756]
+visible = false
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="pnlCard/Control/VBoxContainer/pnlPic/PanelContainer" unique_id=2957399]
+layout_mode = 2
+texture = SubResource("GradientTexture2D_o1cif")
 
 [node name="trectPortrait" type="TextureRect" parent="pnlCard/Control/VBoxContainer/pnlPic" unique_id=1155885482]
-self_modulate = Color(18.892157, 0, 0, 1)
+clip_children = 2
 texture_filter = 1
 layout_mode = 2
 texture = ExtResource("2_801ac")
 expand_mode = 2
 stretch_mode = 5
 
+[node name="rectBG" type="ColorRect" parent="pnlCard/Control/VBoxContainer/pnlPic/trectPortrait" unique_id=919141492]
+material = ExtResource("3_gdr0j")
+layout_mode = 0
+offset_right = 234.0
+offset_bottom = 200.0
+
 [node name="rtlStoryText" type="RichTextLabel" parent="pnlCard/Control/VBoxContainer" unique_id=1909863562]
+clip_contents = false
 layout_mode = 2
 size_flags_vertical = 3
 bbcode_enabled = true
 text = "asdasdasd"
+fit_content = true
+scroll_active = false
 horizontal_alignment = 1
 
 [node name="Button" type="Button" parent="pnlCard" unique_id=115616721]

@@ -20,6 +20,7 @@ config/icon="res://icon.svg"
 __InkRuntime="*uid://bg3qi740b6sjm"
 Global="*uid://bfs87g12xbclg"
 Utils="*uid://cm8t8nfl7fuwk"
+Names="*uid://dcyvxcr0jnnx0"
 
 [display]
 
