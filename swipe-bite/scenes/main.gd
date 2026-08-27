@@ -9,7 +9,7 @@ var stat_ui_scene = preload("uid://bb4g0ohqgsw1q")
 var stat_names = ["hunger", "humanity", "heat", "nights_lasted"]
 var stats_dict = {}
 var cards = []
-var hunger_delta = 1.0
+var hunger_delta = 0.0
 var red_colours = [Color(0.5, 0, 0), Color(0.08, 0, 0), Color(0, 0, 0)]
 var human_colours = [Color(0.03, 0, 0.4), Color(0.56, 0, 0.53), Color(0, 0, 0)]
 

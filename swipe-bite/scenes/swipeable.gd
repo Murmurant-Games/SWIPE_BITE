@@ -13,6 +13,8 @@ class_name Swipeable
 @onready var trect_portrait: TextureRect = $pnlCard/Control/VBoxContainer/pnlPic/trectPortrait
 @onready var anim_player: AnimationPlayer = $animPlayer
 @onready var pnl_stylebox : StyleBoxFlat = $pnlCard.get_theme_stylebox("panel")
+@onready var rtl_lore: RichTextLabel = $pnlLore/rtlLore
+@onready var pnl_lore: PanelContainer = $pnlLore
 
 var portraits = [	#preload("uid://d0aqgef4xhl2l"),
 					#preload("uid://dfdnaqkhqai8c"),
@@ -28,30 +30,74 @@ var portraits = [	#preload("uid://d0aqgef4xhl2l"),
 
 var is_dragging : bool = false
 var text = ""
+var tags = []
 var choices : Array[Choice]
 var card_target_pos : Vector2 = Vector2.ZERO
 var pos_smoothing_factor : float = 0.25
 var tagless_text = ""
+var character_data = {}
+var lines = []
 
 func setup(story : InkPlayer):
+	tags = []
+	lines = []
+	character_data = {}
 	Global.current_swipeable = self
 	if story.get_can_continue():
 		
 		var txt = story.continue_story()
-		var tags = story.get_current_tags().map(func(x): return str(x))
+		tags = story.get_current_tags().map(func(x): return str(x))
 		
+		lines.append(txt)
+		print("Line = " + txt)
 		while should_skip(story, txt, tags):
+			
 			txt = story.continue_story()
-			tags = story.get_current_tags().map(func(x): return str(x))
+			var inner_tags = story.get_current_tags().map(func(x): return str(x))
+			if inner_tags.size() > 0:
+				tags.append(inner_tags[0])
+			lines.append(txt)
 		
+	
+		for line : String in lines:
+			#line = line.replace("\n", "")
+			#print("Line = " + line)
+			if line.to_lower().ends_with("[lore]\n"):
+				print("Found lore")
+				character_data["lore"] = line.replace("[lore]", "")
+			if line.to_lower().ends_with("[bio]\n"):
+				print("Found bio")
+				character_data["bio"] = line.replace("[bio]", "")
+				#print("Found bio: " + line)
+			if line.to_lower().ends_with("[title]\n"):
+				print("Found title")
+				character_data["title"] = line.replace("[title]", "")
+			
 		txt = txt.replace("[br]", "\n")
 			
 		tagless_text = Utils.text_without_tags(txt)
-		rtl_story_text.text = Global.main.get_hunger_bbcode() + txt
+		if character_data.has("bio"):
+			tagless_text = Utils.text_without_tags(character_data["bio"])
+			rtl_story_text.text = Global.main.get_hunger_bbcode() + character_data["bio"]
+		else:
+			rtl_story_text.text = Global.main.get_hunger_bbcode() + txt
+			print("No bio 1: [" + txt + "]")
 		
-		if tags.size() > 0:
-			rtl_title.text =  Global.main.get_hunger_bbcode() + tags[0]
-			rtl_title.text =  Global.main.get_hunger_bbcode() + Names.random_name()
+		if character_data.has("lore"):
+				tagless_text = Utils.text_without_tags(character_data["lore"])
+				pnl_lore.visible = true
+				rtl_lore.text = character_data["lore"]
+		else:
+			pnl_lore.visible = true
+			rtl_lore.text = ""
+	
+		if character_data.has("lore"):
+			#rtl_title.text =  Global.main.get_hunger_bbcode() + tags[0]
+			rtl_title.text =  Global.main.get_hunger_bbcode()
+			if character_data.has("title"):
+				rtl_title.text += character_data["title"]
+			else:
+				rtl_title.text += Names.random_name()
 			pnl_pic.visible = true
 			rect_bg.self_modulate = Color(1, 1, 1, 1.0 - clampf((Utils.change_range(Global.main.get_humanity_delta(), 0.25, 0.75, 0, 1)), 0, 1))
 			portrait_mat.set_shader_parameter("colour_1", Color(randf(), randf(), randf()))
@@ -62,10 +108,13 @@ func setup(story : InkPlayer):
 			
 			pnl_stylebox.bg_color = Color(randf_range(0.1, 0.4), randf_range(0.1, 0.4), randf_range(0.1, 0.4))
 			
+			
+			
 		else:
 			pnl_stylebox.bg_color = Color(0.1, 0.1, 0.1)
 			rtl_title.visible = false
 			pnl_pic.visible = false
+			print("No bio 2")
 		
 		choice_texts.map(func(rtl): 
 			rtl.text = ""
@@ -100,10 +149,10 @@ func setup(story : InkPlayer):
 				choice_txt = "Pursue"
 			choice_texts[index].text = choice_txt
 	else:
-		rtl_story_text.text = "done"
+		rtl_lore.text = "done"
 		
-	rtl_story_text.visible_characters = 0
-	rtl_story_text.visible_characters_behavior = TextServer.VC_CHARS_AFTER_SHAPING
+	rtl_lore.visible_characters = 0
+	rtl_lore.visible_characters_behavior = TextServer.VC_CHARS_AFTER_SHAPING
 	await anim_player.animation_finished
 	show_next_char()
 
@@ -160,7 +209,7 @@ func _on_button_button_down() -> void:
 
 func skip():
 	if not all_text_visible:
-		rtl_story_text.visible_characters = rtl_story_text.text.length()
+		rtl_lore.visible_characters = rtl_lore.text.length()
 		all_text_visible = true
 		anim_player.seek(1.0, true)
 		on_all_text_visible()
@@ -173,9 +222,18 @@ func die():
 	
 func should_skip(story, txt : String, tags) -> bool:
 	txt = str(txt).to_lower()
+	#txt = txt.replace("\n", "")
 	if (tags.size() > 0 and tags[0].to_lower().begins_with("dn_print")):
 		if story.get_current_choices().size() > 0:
 			story.choose_choice_index(0)
+		return true
+	if txt == "\n":
+		return true
+	if txt.ends_with("[bio]\n"):
+		return true
+	if txt.ends_with("[title]\n"):
+		return true
+	if txt.ends_with("[lore]\n"):
 		return true
 	if txt.begins_with("next:"):
 		return true
@@ -204,7 +262,7 @@ func should_skip(story, txt : String, tags) -> bool:
 var text_index = 0
 var all_text_visible = false
 func show_next_char():
-	if rtl_story_text.visible_characters == tagless_text.length():
+	if rtl_lore.visible_characters == tagless_text.length():
 		if not all_text_visible:
 			all_text_visible = true
 			on_all_text_visible()
@@ -213,7 +271,7 @@ func show_next_char():
 		await Utils.await_char(tagless_text, text_index)
 		if not all_text_visible:
 			text_index += 1
-			rtl_story_text.visible_characters = text_index
+			rtl_lore.visible_characters = text_index
 			show_next_char()
 
 func on_all_text_visible():
