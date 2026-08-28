@@ -87,6 +87,10 @@ NIGHT: {nights_lasted} CARDS SEEN: {cards_seen} #DN_print
 
 //, cryptid, vampire, (goth), former_flame, ghost, your_sire, detective, mortal_lover
 
+A night ends with an orange bruise.[br][br]You sleep until the horrid eye of the sun closes and the silver, blind moon's is open.
++ [HUNT]
++ [HUNT]
+-
 -> win_lose_check
 
 //== encounter_happens ==

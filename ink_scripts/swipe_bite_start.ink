@@ -63,7 +63,7 @@ Memories of that night twist like sweat-soaked sheets. Flashes of acid clarity c
 + [The hunger]
     Bolting down raw meat, insatiably hungry.
 -
-    The horror of yourself in the mirror.
+    <> [br][br]The horror of yourself in the mirror.
 + [Your teeth]
     Standing, holding the unrooted tooth that had fallen past your lips, pushed by a curious tongue that was then pricked by the gleaming fang that pushed through the gape.
 + [Your eyes]
@@ -73,10 +73,9 @@ Memories of that night twist like sweat-soaked sheets. Flashes of acid clarity c
 ->continue->
 
 -
-That's when you knew you weren't human anymore.
-What are you?
-+ [I'm human]
-+ [I'm a vampire]
+That's when you knew you weren't human anymore. [br][br]What are you?
++ [I'm human] #+1 Hunger +1 Humanity
++ [I'm a vampire] #-1 Hunger -1 Humanity
 -
 ->->
 
@@ -110,7 +109,9 @@ What are you?
 == choose_character 
 What are you?
     + [Newly Turned]
-    + {heat_ending}[Fatal Siren] //(+1 Feed / +1 Heat) More Heat = More Power
+    + {heat_ending}[Fatal Siren]
+    
+    //(+1 Feed / +1 Heat) More Heat = More Power
     //+ {hunger_ending}[Damned Searcher] // Find a Cure
     //+ {survival_ending}[Young Sire] // Rise in Vampire Society
     //+ {humanity_ending}[Ancient Horror] // FEED & SLUMBER
