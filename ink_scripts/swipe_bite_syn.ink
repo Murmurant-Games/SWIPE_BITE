@@ -1,86 +1,85 @@
 
-=== print_bio(character) ===
+=== print_lore(character) ===
     { character:
         -normie:
-            ~ normie_bio()
+            ~ normie_lore()
             
         -innocent:
-            ~ innocent_bio()
+            ~ innocent_lore()
             
         -hunter:
-            ~ hunter_bio()
+            ~ hunter_lore()
                       
         -thrall:
-            ~ thrall_bio()
+            ~ thrall_lore()
                  
         -douche:
-            ~ douche_bio()
+            ~ douche_lore()
             
         - gym_bro: // MORE JUICE!
-            ~ gym_bro_bio()
+            ~ gym_bro_lore()
            
         - cryptid:
-            ~ cryptid_bio()
+            ~ cryptid_lore()
            
         - former_flame:
-            ~ former_flame_bio()
+            ~ former_flame_lore()
           
         - goth:
-            ~ goth_bio()
+            ~ goth_lore()
             
         - cheater:
-            ~ cheater_bio()
+            ~ cheater_lore()
            
     }
+    <> [lore]
     ->->
 
     
-=== function douche_bio()
+=== function douche_lore()
 {~ He's wearing a trucker cap backwards.|His fingers are knotted in a parody handsign.}
 <> {~ An arm draped over a very drunk woman.|The fish he's holding has bulging, mad eyes.}
-<> {~ His first message is a dick. Presumably his.|He sends you the eggplant emoji followed by several sprays of water.} #Douche
+<> {~ His first message is a dick. Presumably his.|He sends you the eggplant emoji followed by several sprays of water.}
 
-=== function normie_bio()
+=== function normie_lore()
 {~ Golf shirt and chinos.|Lite beer set in front of a mediocre sunset.}
 <> {~ A photo of him mid-golf swing.|Smiling awkwardly in a badly cropped group shot.}
-<> A total normie. #Normie
+<> A total normie.
 
-=== function cheater_bio()
-{~ No face pics and he doesn't want to meet in public. That suits you fine.|Only in town for a few days. He texts the address of a hotel.} #Cheater
+=== function cheater_lore()
+{~ No face pics and he doesn't want to meet in public. That suits you fine.|Only in town for a few days. He texts the address of a hotel.} 
 
 
-=== function hunter_bio()
+=== function hunter_lore()
 {~ Buff but his eyes are haunted.| He's not looking for a date, he's looking for revenge.}
-<> {~ The red flags you can't ignore.| } #Hunter
+<> {~ The red flags you can't ignore.| } 
 
-=== function another_hunter_bio()
+=== function another_hunter_lore()
 {~ Buff but his eyes are haunted.| He's not looking for a date, he's looking for revenge.}
-<> {~ The red flags you can't ignore.| } #Another Hunter
+<> {~ The red flags you can't ignore.| } 
 
-=== function experienced_hunter_bio()
+=== function experienced_hunter_lore()
 {~ Buff but his eyes are haunted.| He's not looking for a date, he's looking for revenge.}
-<> {~ The red flags you can't ignore.| } #Experienced Hunter
+<> {~ The red flags you can't ignore.| } 
 
-=== function innocent_bio()
-{~ They have kind eyes. Too kind to survive in a world this cruel. Would it be kindness to spare them?|In one photo a bird is perched on her finger, she's smiling in pure delight.} #Innocent
+=== function innocent_lore()
+{~ They have kind eyes. Too kind to survive in a world this cruel. Would it be kindness to spare them?|In one photo a bird is perched on her finger, she's smiling in pure delight.} 
 
-=== function thrall_bio()
-{~ Handy with powertools. |Capable of walking in sunlight.| If he didn't have a service kink, he will soon.} #Thrall
+=== function thrall_lore()
+{~ Handy with powertools. |Capable of walking in sunlight.| If he didn't have a service kink, he will soon.} 
 
+=== function gym_bro_lore()
+{~ Those thick arms are nice. Especially the engorged veins wrapping them.|He'll taste like whey powder and sweat.} 
 
-=== function gym_bro_bio()
-{~ Those thick arms are nice. Especially the engorged veins wrapping them.|He'll taste like whey powder and sweat.} #Gym Bro
-
-
-=== function cryptid_bio()
+=== function cryptid_lore()
 {~ Its smile is too feral. |Its glittering skin too moist. That's not make up.} #Cryptid
 
-=== function vampire_bio()
+=== function vampire_lore()
 {~ A glint of sharp teeth.|Her white skin is too white. She's sipping red wine. Oh... not wine.} #Vampire
 
-=== function goth_bio()
+=== function goth_lore()
 {~ They're excited to get bitten. You're not sure if they believe it's real or a kink thing.|A skinny body armored with black lace.} #Goth
 
-=== function former_flame_bio()
+=== function former_flame_lore()
 {~ You've crossed paths before.|You two had a little fun before it fizzled.}
 <> One of you ghosted the other. Now one of you is really going to become a ghost. #Former Flame

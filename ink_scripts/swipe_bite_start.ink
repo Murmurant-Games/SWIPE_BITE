@@ -5,6 +5,7 @@ INCLUDE swipe_bite_card_effects.ink
 INCLUDE swipe_bite_endings.ink
 INCLUDE swipe_bite_outcomes.ink
 INCLUDE swipe_bite_cycles.ink
+INCLUDE INK FUNCTION LIBRARY/FUNC_NameGenerator.ink
 
 
 VAR hunger = 5
@@ -90,7 +91,7 @@ That's when you knew you weren't human anymore. [br][br]What are you?
 ~ deal(who, cards)
 
 
-->print_bio(who)->
+->print_lore(who)->
 
 ~ cards_seen ++
 

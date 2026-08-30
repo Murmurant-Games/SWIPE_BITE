@@ -18,6 +18,11 @@ LIST encounters = coven_summons, warehouse_rave, blood_tithe, investigation, sen
         }
         
 /*
+
+THoughts [lore]
+Dick Richardson [title]
+Hit me up if you like swimming. [bio]
+
 [b]Memories[/b] of that night [tornado]twist[/tornado] like [i][u]sweat-soaked[/u][/i] sheets.[br][br] Flashes of [color=green]acid[/color] clarity [shake rate=20.0 level=5]clashing[/shake] with impossible visions.
 [\[color=cyan\]The cold\[/color\]]
 [\[pulse freq=1.0 color=red ease=-2.0\]The hunger\[pulse\]]
