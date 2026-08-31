@@ -16,9 +16,7 @@ What is dead cannot die. But it can stop moving. Except for when the wind stirs 
 -> EndDemo
 
 == hunger_ending
-The hunger is not endless. There comes a point when you defeat it.
-The cold closes in and you start to tremble, something you haven't done since you turned. Perhaps this is a kind of victory, holding on to your humanity to the end.
-You die human.
+The hunger is not endless. There comes a point when you defeat it. [br]The cold closes in and you start to tremble, something you haven't done since you turned. Perhaps this is a kind of victory, holding on to your humanity to the end.[br]You die human.
 ->continue->
 -> EndDemo
 
@@ -33,9 +31,9 @@ You lasted {nights_lasted} nights... survival is all that matters and you are a 
 
 ~ endings_reached ++
 
-Endings Unlocked: {endings_reached}
+Endings Unlocked:[br][br]{endings_reached}
  
 THE END
 ->continue->
 
-->play_menu
+->start

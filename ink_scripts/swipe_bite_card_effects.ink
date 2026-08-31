@@ -116,7 +116,8 @@
             - else:
                 ~ alter(hunger,2)
                 }
-                
+        - else:
+            NO EFFECT CODED
     }
     
     ->->

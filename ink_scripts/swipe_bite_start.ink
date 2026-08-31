@@ -1,11 +1,17 @@
 INCLUDE INK FUNCTION LIBRARY/FUNC_essentials.ink
+
 INCLUDE swipe_bite_syn.ink
 INCLUDE swipe_bite_variables.ink
 INCLUDE swipe_bite_card_effects.ink
 INCLUDE swipe_bite_endings.ink
 INCLUDE swipe_bite_outcomes.ink
 INCLUDE swipe_bite_cycles.ink
-INCLUDE INK FUNCTION LIBRARY/FUNC_NameGenerator.ink
+INCLUDE swipe_bite_bios.ink
+INCLUDE swipe_bite_names.ink
+INCLUDE swipe_bite_card_effects_print.ink
+
+
+
 
 
 VAR hunger = 5
@@ -31,21 +37,16 @@ VAR cards_seen = 0
 -> start
 
 == start ==
-//GAME OPENING SCREEN etc. #DN_print
- //❀ ⚸  👁 ❣🩸 ⚗ ⚱ N
-->intro->
 
-->play_menu
-
-== play_menu
-//Play throughs: {endings_reached} #DN_print
 
 {endings_reached:->choose_character->}
 
+Swipe...
 
-+ [Play Game]
-//+ [LOCK RANDOMISER]
-    //~ SEED_RANDOM(235)
++ [How to Play]
+    ->how_to_play->
++ [Start Game]
+    
 -
 
 ~ hunger = 5
@@ -53,25 +54,36 @@ VAR cards_seen = 0
 ~ heat = 0
 ~ nights_lasted = 0
 
+{not endings_reached:->first_night->}
 
-    -> begin_end_cycle
+    -> random_encounter
 
-== intro
-Memories of that night twist like sweat-soaked sheets. Flashes of acid clarity clashing with impossible visions.
+== how_to_play
+You are a vampire.[br]They are your opportunities.[br]Face them and Feed, or Avoid them and Hunger. Some encounters will erode your humanity. Some will bring unwanted attention. [explainer]
+->continue->
+
+If your Humanity drops to 0 you will lose yourself.[br]If your Hunger reaches 10 you will perish.[br]If your Heat reaches 10 you will be revealed.[br][br]Stay hidden and stay fed to survive... hold on to your humanity if you can. [explainer]
+->continue->
+
+->->
+
+== first_night
+Memories of your turning twist like sweat-soaked sheets. Flashes of acid clarity clashing with impossible visions.
 
 + [The cold]
-    Shuddering under a scalding shower desperate to get warm. 
+    Shuddering under a scalding shower desperate to get warm. <>
 + [The hunger]
-    Bolting down raw meat, insatiably hungry.
+    Bolting down raw meat, insatiably hungry. <>
 -
     <> [br][br]The horror of yourself in the mirror.
 + [Your teeth]
     Standing, holding the unrooted tooth that had fallen past your lips, pushed by a curious tongue that was then pricked by the gleaming fang that pushed through the gape.
 + [Your eyes]
-    Standing, holding the unrooted tooth that had fallen past your lips, pushed by a curious tongue that was then pricked by the gleaming fang that pushed through the gape.
+    Standing, staring... fixated on your reflection as it wavers, fading. First the eyes, though your vision is sharp as your teeth.[br]Aren't eyes the windows of the soul?
 -
 
-->continue->
++ [You're Afraid]
++ [You're excited]
 
 -
 That's when you knew you weren't human anymore. [br][br]What are you?
@@ -90,9 +102,10 @@ That's when you knew you weren't human anymore. [br][br]What are you?
 
 ~ deal(who, cards)
 
-
+->print_name(who)->
 ->print_lore(who)->
-
+->print_bio(who)->
+->card_effect_print(who)->
 ~ cards_seen ++
 
 + [FEED / FACE:] //RETURN TRUE
@@ -120,3 +133,10 @@ What are you?
         // Hunter of Hunters
     -
 ->->
+
+== continue
+
+    + [CONTINUE]
+    + [CONTINUE]
+    -
+    ->->

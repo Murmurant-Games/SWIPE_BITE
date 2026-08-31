@@ -19,7 +19,7 @@ LIST encounters = coven_summons, warehouse_rave, blood_tithe, investigation, sen
         
 /*
 
-THoughts [lore]
+Thoughts [lore]
 Dick Richardson [title]
 Hit me up if you like swimming. [bio]
 

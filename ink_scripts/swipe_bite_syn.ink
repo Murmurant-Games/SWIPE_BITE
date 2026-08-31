@@ -30,6 +30,9 @@
             
         - cheater:
             ~ cheater_lore()
+
+        - else:
+            MISSING            
            
     }
     <> [lore]
@@ -47,7 +50,7 @@
 <> A total normie.
 
 === function cheater_lore()
-{~ No face pics and he doesn't want to meet in public. That suits you fine.|Only in town for a few days. He texts the address of a hotel.} 
+{~ He doesn't want to meet in public. That suits you fine.|Only in town for a few days. He texts the address of a hotel.} 
 
 
 === function hunter_lore()
@@ -72,14 +75,14 @@
 {~ Those thick arms are nice. Especially the engorged veins wrapping them.|He'll taste like whey powder and sweat.} 
 
 === function cryptid_lore()
-{~ Its smile is too feral. |Its glittering skin too moist. That's not make up.} #Cryptid
+{~ Its smile is too feral. |Its glittering skin too moist. That's not make up.}
 
 === function vampire_lore()
-{~ A glint of sharp teeth.|Her white skin is too white. She's sipping red wine. Oh... not wine.} #Vampire
+{~ A glint of sharp teeth.|Her white skin is too white. She's sipping red wine. Oh... not wine.}
 
 === function goth_lore()
-{~ They're excited to get bitten. You're not sure if they believe it's real or a kink thing.|A skinny body armored with black lace.} #Goth
+{~ They're excited to get bitten. You're not sure if they believe it's real or a kink thing.|A skinny body armored with black lace.}
 
 === function former_flame_lore()
 {~ You've crossed paths before.|You two had a little fun before it fizzled.}
-<> One of you ghosted the other. Now one of you is really going to become a ghost. #Former Flame
+<> One of you ghosted the other. Now one of you is really going to become a ghost.

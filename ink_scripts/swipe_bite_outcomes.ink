@@ -1,3 +1,4 @@
+/*
 
 === outcomes(character, feed) ===
 { character:
@@ -90,12 +91,7 @@
     ->continue->
     ->->
     
-== continue
 
-    + [CONTINUE]
-    + [CONTINUE]
-    -
-    ->->
 
 == react_to_outcome(who)
 
@@ -116,3 +112,4 @@
     //-> alter_stat(who,false)->
 -    
 ->->
+*/

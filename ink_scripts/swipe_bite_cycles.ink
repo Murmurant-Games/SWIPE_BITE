@@ -4,16 +4,22 @@
     {hunger > 10:
         -> hunger_ending
         }
+    {hunger > 8:
+        You are growing hungrier, maddeningly hungry. [warning]
+        }
     {humanity < 0:
         -> humanity_ending
+        }
+    {humanity < 2:
+        You are losing touch with you humanity. [warning]
         }
     {heat > 10:
         -> heat_ending
         }
-    //{health < 0:
-        //-> death_ending
-        //}
-    {nights_lasted >= 20:
+    {heat > 8:
+        You are drawing too much attention. [warning]
+        }
+    {nights_lasted >= 5:
         -> survival_ending
         }
 /*
@@ -87,7 +93,7 @@ NIGHT: {nights_lasted} CARDS SEEN: {cards_seen} #DN_print
 
 //, cryptid, vampire, (goth), former_flame, ghost, your_sire, detective, mortal_lover
 
-A night ends with an orange bruise.[br][br]You sleep until the horrid eye of the sun closes and the silver, blind moon's is open.
+A night ends with an orange bruise.[br][br]You sleep until the horrid eye of the sun closes and the silver, blind moon's is open. [night]
 + [HUNT]
 + [HUNT]
 -
