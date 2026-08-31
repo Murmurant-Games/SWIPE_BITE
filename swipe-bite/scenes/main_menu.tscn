@@ -1,13 +1,957 @@
 [gd_scene format=3 uid="uid://q32xx74prj6g"]
 
 [ext_resource type="Script" uid="uid://2cy6xo6pewpt" path="res://scenes/main_menu.gd" id="1_l6cm7"]
+[ext_resource type="PackedScene" uid="uid://bi31d1450kg8r" path="res://scenes/eye.tscn" id="2_ekxnf"]
+[ext_resource type="Texture2D" uid="uid://ccqtpxcujgfyk" path="res://art/SwipeBiteTitleNoShadow.png" id="3_bqqt6"]
+[ext_resource type="Texture2D" uid="uid://bq4na0hvqa8n8" path="res://art/SwipeBiteTitleShadow.png" id="3_wu84c"]
+[ext_resource type="AudioStream" uid="uid://blt0at8q1gup0" path="res://sound/in_whoosh.ogg" id="5_8ln24"]
+[ext_resource type="Material" uid="uid://dol64y4y6xwox" path="res://scenes/btn_play_mat.tres" id="5_oa1go"]
+[ext_resource type="Texture2D" uid="uid://3oskpvapfq3v" path="res://art/survived.png" id="6_tbmy8"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o1cif"]
-content_margin_top = 16.0
-bg_color = Color(0.21484375, 0.0013067434, 0, 1)
-border_width_bottom = 288
-border_color = Color(0, 0, 0, 1)
-border_blend = true
+[sub_resource type="Shader" id="Shader_l6cm7"]
+code = "shader_type canvas_item;
+//took it directly from balatro source code
+//buy balatro now: https://www.playbalatro.com
+
+
+uniform highp float spin_rotation_speed = 2.0;
+uniform highp float move_speed = 7.0;
+uniform highp vec2 offset = vec2(0., 0.);
+uniform highp vec4 colour_1 : source_color = vec4(0.5, 0.0, 0.0, 1.0);
+uniform highp vec4 colour_2 : source_color = vec4(0.0, 0.02, 0.006, 1.0);
+uniform highp vec4 colour_3 : source_color = vec4(0.0, 0.1, 0.1, 1.0);
+uniform highp float contrast = 3.5;
+uniform highp float lighting = 0.4;
+uniform highp float spin_amount = 0.25;
+uniform highp float pixel_filter = 740.;
+uniform bool is_rotating = false;
+#define MAXCOLORS 16
+
+uniform bool enabled = true;
+uniform bool dithering = true;
+uniform int colors : hint_range(1, MAXCOLORS) = 8;
+uniform int dither_size: hint_range(1, 8) = 2;
+
+float dithering_pattern(ivec2 fragcoord) {
+	const float pattern[] = {
+		0.00, 0.50, 0.10, 0.65, 
+		0.75, 0.25, 0.90, 0.35, 
+		0.20, 0.70, 0.05, 0.50, 
+		0.95, 0.40, 0.80, 0.30
+	};
+	
+	int x = fragcoord.x % 4;
+	int y = fragcoord.y % 4;
+	
+	return pattern[y * 4 + x];
+}
+
+#define SPIN_EASE 1.0
+
+
+vec4 effect(vec2 screenSize, vec2 screen_coords){
+
+	highp float pixel_size = length(screenSize.xy) / pixel_filter;
+    highp vec2 uv = (floor(screen_coords.xy*(1./pixel_size))*pixel_size - 0.5*screenSize.xy)/length(screenSize.xy) - offset;
+    highp float uv_len = length(uv);
+
+
+    highp float speed = (spin_rotation_speed*SPIN_EASE*0.2);
+	if(is_rotating){
+		speed = TIME * speed;
+	}
+	speed += 302.2;
+    highp float new_pixel_angle = (atan(uv.y, uv.x)) + speed - SPIN_EASE*20.*(1.*spin_amount*uv_len + (1. - 1.*spin_amount));
+    highp vec2 mid = (screenSize.xy/length(screenSize.xy))/2.;
+    uv = (vec2((uv_len * cos(new_pixel_angle) + mid.x), (uv_len * sin(new_pixel_angle) + mid.y)) - mid);
+
+    uv *= 30.;
+    speed = TIME*(move_speed);
+	highp vec2 uv2 = vec2(uv.x+uv.y);
+
+	for(int i=0; i < 5; i++) {
+		uv2 += sin(max(uv.x, uv.y)) + uv;
+		uv  += 0.5*vec2(cos(5.1123314 + 0.353*uv2.y + speed*0.131121),sin(uv2.x - 0.113*speed));
+		uv  -= 1.0*cos(uv.x + uv.y) - 1.0*sin(uv.x*0.711 - uv.y);
+	}
+
+
+    highp float contrast_mod = (0.25*contrast + 0.5*spin_amount + 1.2);
+	highp float paint_res = min(2., max(0.,length(uv)*(0.035)*contrast_mod));
+    highp float c1p = max(0.,1. - contrast_mod*abs(1.-paint_res));
+    highp float c2p = max(0.,1. - contrast_mod*abs(paint_res));
+    highp float c3p = 1. - min(1., c1p + c2p);
+	
+	highp float ligth = (lighting - 0.2) * max(c1p*5. - 4., 0.) + lighting * max(c2p*5. - 4., 0.); 
+	highp vec4 ret_col = (0.3/contrast)*colour_1 + (1. - 0.3/contrast)*(colour_1*c1p + colour_2*c2p + vec4(c3p*colour_3.rgb, c3p*colour_1.a)) + ligth;
+	return ret_col;
+}
+float reduce_color(float raw, float dither, int depth) {
+	float div = 1.0 / float(depth);
+	float val = 0.0;
+	int i = 0;
+
+	while (i <= MAXCOLORS)
+	{
+		if (raw > div * (float(i + 1))) {
+			i = i + 1;
+			continue;
+		}
+
+		if (raw * float(depth) - float(i) <= dither * 0.999)
+		{
+			val = div * float(i);
+		} 
+		else
+		{
+			val = div * float(i + 1);
+		}
+		return val;
+
+		i = i+1;
+	}
+
+	return val;
+}
+
+const float ps1_dither[16] = float[16](
+	-4.0, 0.0, -3.0, 0.0,
+	2.0, -2.0, 3.0, -1.0,
+	-3.0, 1.0, -4.0, 0.0,
+	3.0, -1.0, 2.0, -2.0
+);
+
+
+void fragment() {
+    vec2 uv = UV;
+	//COLOR *= effect(TEXTURE_PIXEL_SIZE, uv);
+	
+	vec4 screen_colour = effect(TEXTURE_PIXEL_SIZE, uv);
+	vec4 raw = screen_colour;
+	ivec2 iuv = ivec2(FRAGCOORD.xy / float(dither_size));
+
+	
+	float dithering_value = 1.0;
+	if (dithering)
+	{
+		dithering_value = dithering_pattern(iuv);
+	}
+	
+	COLOR.r = reduce_color(raw.r, (dithering_value - 0.5) * dithering_value + 0.5, colors - 1);
+	COLOR.g = reduce_color(raw.g, (dithering_value - 0.5) * dithering_value + 0.5, colors - 1);
+	COLOR.b = reduce_color(raw.b, (dithering_value - 0.5) * dithering_value + 0.5, colors - 1);
+
+	//int x = int(FRAGCOORD.x) % 512;
+	//int y = int(FRAGCOORD.y) % 512;
+	//int index = x + (y * 512);
+	//
+	//float dither_offset = (ps1_dither[index] / 512.0);
+	//
+	//vec3 quantized_colour = floor((screen_colour * 255.0) / 8.0 + dither_offset) / 31.0;
+	//COLOR = vec4(quantized_colour, 1.0);
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ekxnf"]
+shader = SubResource("Shader_l6cm7")
+shader_parameter/spin_rotation_speed = 2.0
+shader_parameter/move_speed = 5.0
+shader_parameter/offset = Vector2(0, 0)
+shader_parameter/colour_1 = Color(0.48046875, 0.0062847324, 0, 1)
+shader_parameter/colour_2 = Color(0, 0, 0, 1)
+shader_parameter/colour_3 = Color(0, 0, 0, 1)
+shader_parameter/contrast = 0.75
+shader_parameter/lighting = 0.0
+shader_parameter/spin_amount = 0.13
+shader_parameter/pixel_filter = 740.0
+shader_parameter/is_rotating = false
+shader_parameter/enabled = true
+shader_parameter/dithering = true
+shader_parameter/colors = 8
+shader_parameter/dither_size = 2
+
+[sub_resource type="Shader" id="Shader_wu84c"]
+code = "shader_type canvas_item;
+//took it directly from balatro source code
+//buy balatro now: https://www.playbalatro.com
+
+
+uniform highp float spin_rotation_speed = 2.0;
+uniform highp float move_speed = 7.0;
+uniform highp vec2 offset = vec2(0., 0.);
+uniform highp vec4 colour_1 : source_color = vec4(0.5, 0.0, 0.0, 1.0);
+uniform highp vec4 colour_2 : source_color = vec4(0.0, 0.02, 0.006, 1.0);
+uniform highp vec4 colour_3 : source_color = vec4(0.0, 0.1, 0.1, 1.0);
+uniform highp float contrast = 3.5;
+uniform highp float lighting = 0.4;
+uniform highp float spin_amount = 0.25;
+uniform highp float pixel_filter = 740.;
+uniform bool is_rotating = false;
+#define MAXCOLORS 16
+
+uniform bool enabled = true;
+uniform bool dithering = true;
+uniform int colors : hint_range(1, MAXCOLORS) = 8;
+uniform int dither_size: hint_range(1, 8) = 2;
+
+float dithering_pattern(ivec2 fragcoord) {
+	const float pattern[] = {
+		0.00, 0.50, 0.10, 0.65, 
+		0.75, 0.25, 0.90, 0.35, 
+		0.20, 0.70, 0.05, 0.50, 
+		0.95, 0.40, 0.80, 0.30
+	};
+	
+	int x = fragcoord.x % 4;
+	int y = fragcoord.y % 4;
+	
+	return pattern[y * 4 + x];
+}
+
+#define SPIN_EASE 1.0
+
+
+vec4 effect(vec2 screenSize, vec2 screen_coords){
+
+	highp float pixel_size = length(screenSize.xy) / pixel_filter;
+    highp vec2 uv = (floor(screen_coords.xy*(1./pixel_size))*pixel_size - 0.5*screenSize.xy)/length(screenSize.xy) - offset;
+    highp float uv_len = length(uv);
+
+
+    highp float speed = (spin_rotation_speed*SPIN_EASE*0.2);
+	if(is_rotating){
+		speed = TIME * speed;
+	}
+	speed += 302.2;
+    highp float new_pixel_angle = (atan(uv.y, uv.x)) + speed - SPIN_EASE*20.*(1.*spin_amount*uv_len + (1. - 1.*spin_amount));
+    highp vec2 mid = (screenSize.xy/length(screenSize.xy))/2.;
+    uv = (vec2((uv_len * cos(new_pixel_angle) + mid.x), (uv_len * sin(new_pixel_angle) + mid.y)) - mid);
+
+    uv *= 30.;
+    speed = TIME*(move_speed);
+	highp vec2 uv2 = vec2(uv.x+uv.y);
+
+	for(int i=0; i < 5; i++) {
+		uv2 += sin(max(uv.x, uv.y)) + uv;
+		uv  += 0.5*vec2(cos(5.1123314 + 0.353*uv2.y + speed*0.131121),sin(uv2.x - 0.113*speed));
+		uv  -= 1.0*cos(uv.x + uv.y) - 1.0*sin(uv.x*0.711 - uv.y);
+	}
+
+
+    highp float contrast_mod = (0.25*contrast + 0.5*spin_amount + 1.2);
+	highp float paint_res = min(2., max(0.,length(uv)*(0.035)*contrast_mod));
+    highp float c1p = max(0.,1. - contrast_mod*abs(1.-paint_res));
+    highp float c2p = max(0.,1. - contrast_mod*abs(paint_res));
+    highp float c3p = 1. - min(1., c1p + c2p);
+	
+	highp float ligth = (lighting - 0.2) * max(c1p*5. - 4., 0.) + lighting * max(c2p*5. - 4., 0.); 
+	highp vec4 ret_col = (0.3/contrast)*colour_1 + (1. - 0.3/contrast)*(colour_1*c1p + colour_2*c2p + vec4(c3p*colour_3.rgb, c3p*colour_1.a)) + ligth;
+	return ret_col;
+}
+float reduce_color(float raw, float dither, int depth) {
+	float div = 1.0 / float(depth);
+	float val = 0.0;
+	int i = 0;
+
+	while (i <= MAXCOLORS)
+	{
+		if (raw > div * (float(i + 1))) {
+			i = i + 1;
+			continue;
+		}
+
+		if (raw * float(depth) - float(i) <= dither * 0.999)
+		{
+			val = div * float(i);
+		} 
+		else
+		{
+			val = div * float(i + 1);
+		}
+		return val;
+
+		i = i+1;
+	}
+
+	return val;
+}
+
+const float ps1_dither[16] = float[16](
+	-4.0, 0.0, -3.0, 0.0,
+	2.0, -2.0, 3.0, -1.0,
+	-3.0, 1.0, -4.0, 0.0,
+	3.0, -1.0, 2.0, -2.0
+);
+
+
+void fragment() {
+    vec2 uv = UV;
+	//COLOR *= effect(TEXTURE_PIXEL_SIZE, uv);
+	
+	vec4 screen_colour = effect(TEXTURE_PIXEL_SIZE, uv);
+	vec4 raw = screen_colour;
+	ivec2 iuv = ivec2(FRAGCOORD.xy / float(dither_size));
+
+	
+	float dithering_value = 1.0;
+	if (dithering)
+	{
+		dithering_value = dithering_pattern(iuv);
+	}
+	
+	COLOR.r = reduce_color(raw.r, (dithering_value - 0.5) * dithering_value + 0.5, colors - 1);
+	COLOR.g = reduce_color(raw.g, (dithering_value - 0.5) * dithering_value + 0.5, colors - 1);
+	COLOR.b = reduce_color(raw.b, (dithering_value - 0.5) * dithering_value + 0.5, colors - 1);
+
+	//int x = int(FRAGCOORD.x) % 512;
+	//int y = int(FRAGCOORD.y) % 512;
+	//int index = x + (y * 512);
+	//
+	//float dither_offset = (ps1_dither[index] / 512.0);
+	//
+	//vec3 quantized_colour = floor((screen_colour * 255.0) / 8.0 + dither_offset) / 31.0;
+	//COLOR = vec4(quantized_colour, 1.0);
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8ln24"]
+shader = SubResource("Shader_wu84c")
+shader_parameter/spin_rotation_speed = 2.0
+shader_parameter/move_speed = 5.0
+shader_parameter/offset = Vector2(0, 0)
+shader_parameter/colour_1 = Color(0, 0, 0, 1)
+shader_parameter/colour_2 = Color(0.47996902, 0, 1, 1)
+shader_parameter/colour_3 = Color(0, 0, 0, 1)
+shader_parameter/contrast = 1.005
+shader_parameter/lighting = 0.59
+shader_parameter/spin_amount = -0.095
+shader_parameter/pixel_filter = 740.0
+shader_parameter/is_rotating = true
+shader_parameter/enabled = true
+shader_parameter/dithering = true
+shader_parameter/colors = 4
+shader_parameter/dither_size = 2
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rtw2f"]
+shader = SubResource("Shader_wu84c")
+shader_parameter/spin_rotation_speed = 2.0
+shader_parameter/move_speed = 5.0
+shader_parameter/offset = Vector2(0, 0)
+shader_parameter/colour_1 = Color(0, 0, 0, 1)
+shader_parameter/colour_2 = Color(0, 0, 0, 1)
+shader_parameter/colour_3 = Color(0, 0, 0, 1)
+shader_parameter/contrast = 1.005
+shader_parameter/lighting = 0.725
+shader_parameter/spin_amount = 0.25
+shader_parameter/pixel_filter = 740.0
+shader_parameter/is_rotating = true
+shader_parameter/enabled = true
+shader_parameter/dithering = true
+shader_parameter/colors = 8
+shader_parameter/dither_size = 2
+
+[sub_resource type="Shader" id="Shader_8ln24"]
+code = "shader_type canvas_item;
+
+#define MAXCOLORS 16
+
+uniform sampler2D dissolve_texture : source_color;
+uniform float dissolve_value : hint_range(0,1);
+uniform float burn_size: hint_range(0.0, 1.0, 0.01);
+uniform vec4 burn_color: source_color;
+
+uniform bool enabled = true;
+uniform bool dithering = true;
+uniform int colors : hint_range(1, MAXCOLORS) = 8;
+uniform int dither_size: hint_range(1, 8) = 2;
+
+float dithering_pattern(ivec2 fragcoord) {
+	const float pattern[] = {
+		0.00, 0.50, 0.10, 0.65, 
+		0.75, 0.25, 0.90, 0.35, 
+		0.20, 0.70, 0.05, 0.50, 
+		0.95, 0.40, 0.80, 0.30
+	};
+	
+	int x = fragcoord.x % 4;
+	int y = fragcoord.y % 4;
+	
+	return pattern[y * 4 + x];
+}
+
+#define SPIN_EASE 1.0
+
+float reduce_color(float raw, float dither, int depth) {
+	float div = 1.0 / float(depth);
+	float val = 0.0;
+	int i = 0;
+
+	while (i <= MAXCOLORS)
+	{
+		if (raw > div * (float(i + 1))) {
+			i = i + 1;
+			continue;
+		}
+
+		if (raw * float(depth) - float(i) <= dither * 0.999)
+		{
+			val = div * float(i);
+		} 
+		else
+		{
+			val = div * float(i + 1);
+		}
+		return val;
+
+		i = i+1;
+	}
+
+	return val;
+}
+
+const float ps1_dither[16] = float[16](
+	-4.0, 0.0, -3.0, 0.0,
+	2.0, -2.0, 3.0, -1.0,
+	-3.0, 1.0, -4.0, 0.0,
+	3.0, -1.0, 2.0, -2.0
+);
+
+
+void fragment() {
+    vec2 uv = UV;
+	
+	vec4 main_texture = texture(TEXTURE, UV);
+    vec4 noise_texture = texture(dissolve_texture, UV);
+	
+	float burn_size_step = burn_size * step(0.001, dissolve_value) * step(dissolve_value, 0.999);
+	float threshold = smoothstep(noise_texture.x-burn_size_step, noise_texture.x, dissolve_value);
+	float border = smoothstep(noise_texture.x, noise_texture.x + burn_size_step, dissolve_value);
+	
+	
+	vec4 tex = main_texture;
+	
+	tex.a *= threshold;
+
+	tex.rgb = mix(burn_color.rgb, main_texture.rgb, border);
+	
+	vec4 screen_colour = tex;
+	vec4 raw = screen_colour;
+	ivec2 iuv = ivec2(FRAGCOORD.xy / float(dither_size));
+
+	float dithering_value = 1.0;
+	if (dithering)
+	{
+		dithering_value = dithering_pattern(iuv);
+	}
+	
+	vec4 dithered_color = vec4(0, 0, 0, 1);
+	
+	dithered_color.r = reduce_color(raw.r, (dithering_value - 0.5) * dithering_value + 0.5, colors - 1);
+	dithered_color.g = reduce_color(raw.g, (dithering_value - 0.5) * dithering_value + 0.5, colors - 1);
+	dithered_color.b = reduce_color(raw.b, (dithering_value - 0.5) * dithering_value + 0.5, colors - 1);
+	dithered_color.a = tex.a;
+	
+	COLOR = dithered_color;
+}
+"
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_rtw2f"]
+seed = 10
+frequency = 0.0003
+fractal_octaves = 4
+fractal_lacunarity = 4.07
+fractal_gain = -1.735
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_jlnis"]
+width = 128
+height = 128
+noise = SubResource("FastNoiseLite_rtw2f")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_oa1go"]
+shader = SubResource("Shader_8ln24")
+shader_parameter/dissolve_texture = SubResource("NoiseTexture2D_jlnis")
+shader_parameter/dissolve_value = 1.0
+shader_parameter/burn_size = 0.0999999977648
+shader_parameter/burn_color = Color(0.9738531, 0, 1, 1)
+shader_parameter/enabled = true
+shader_parameter/dithering = true
+shader_parameter/colors = 3
+shader_parameter/dither_size = 2
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jk1qb"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_tbmy8"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_5dd4i"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_lgwnu"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_flqon"]
+
+[sub_resource type="Animation" id="Animation_8ln24"]
+resource_name = "EnterMain"
+length = 2.5000000000000004
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = false
+tracks/0/path = NodePath("trectTitleMain:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(3.7321372, 0.14865114),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("trectTitleMainGlow:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(3.7321372, 0.14865114),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("trectTitleMainShadow:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(3.7321372, 0.14865114),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath(".:bg_col_a")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.8666667),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0.37254903, 0, 0, 1), Color(0, 0, 0, 1)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath(".:bg_col_c")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 1.8666667),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 0, 0, 1), Color(0, 0, 0, 1)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath(".:dissolve")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 1.5),
+"transitions": PackedFloat32Array(3.138337, 3.138337),
+"update": 0,
+"values": [1.0, 0.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:play_dissolve")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 0.55),
+"transitions": PackedFloat32Array(0.15389307, 0.15389307),
+"update": 0,
+"values": [1.0, 0.0]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = false
+tracks/7/path = NodePath("btnPlay:modulate")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(),
+"transitions": PackedFloat32Array(),
+"update": 0,
+"values": []
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("btnPlay/RichTextLabel:self_modulate")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0.54, 1.08),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_bqqt6"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:bg_col_c")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0, 0, 0, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:bg_col_a")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0.37254903, 0, 0, 1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("ctrlEyes:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath(".:bgm_volume")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("trectTitleMain:modulate")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("trectTitleMainShadow:scale:y")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [1.15]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath(".:glow_spin")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.2]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("trectTitleMainGlow:scale")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1.005, 1.115)]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath(".:dissolve")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [1.0]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath(".:play_dissolve")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [1.0]
+}
+tracks/10/type = "value"
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/path = NodePath("btnPlay:modulate")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_wu84c"]
+resource_name = "Show"
+length = 15.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:bg_col_a")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(4.7, 8.7),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0, 0, 0, 1), Color(0.328125, 0, 0, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:bg_col_b")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(),
+"transitions": PackedFloat32Array(),
+"update": 0,
+"values": []
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".:bg_col_c")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(8.74, 12.199999),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0, 0, 0, 1), Color(1, 0, 0, 1)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("ctrlEyes:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(7, 15),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath(".:bgm_volume")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(4.0666666, 6.0466666),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 1.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = false
+tracks/5/path = NodePath("trectTitleMain:modulate")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(3.6333334, 3.9),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 1)]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("trectTitleMainGlow:modulate")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0, 3.1333334),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("trectTitleMainShadow:modulate")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(3.3333335, 4.133333),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("trectTitleMainShadow:scale:y")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(3.5333335, 5.8999996),
+"transitions": PackedFloat32Array(0.4204482, 0.4204482),
+"update": 0,
+"values": [0.8, 1.15]
+}
+tracks/9/type = "audio"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("AudioStreamPlayer2D")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"clips": [{
+"end_offset": 0.0,
+"start_offset": 0.0,
+"stream": ExtResource("5_8ln24")
+}],
+"times": PackedFloat32Array(1.0666667)
+}
+tracks/9/use_blend = true
+tracks/10/type = "value"
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/path = NodePath(".:glow_spin")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/keys = {
+"times": PackedFloat32Array(0, 3.7, 4.2, 14.966666),
+"transitions": PackedFloat32Array(12.996024, 12.996024, 0.2588163, 0.2588163),
+"update": 0,
+"values": [0.25, -2.85, -2.85, 0.25]
+}
+tracks/11/type = "value"
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/path = NodePath("trectTitleMainGlow:scale")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/keys = {
+"times": PackedFloat32Array(0.033333335, 3.9333334),
+"transitions": PackedFloat32Array(3.863751, 3.863751),
+"update": 0,
+"values": [Vector2(3.905, 3.94), Vector2(1.005, 1.115)]
+}
+tracks/12/type = "value"
+tracks/12/imported = false
+tracks/12/enabled = true
+tracks/12/path = NodePath("trectTitleMainGlow:scale")
+tracks/12/interp = 1
+tracks/12/loop_wrap = true
+tracks/12/keys = {
+"times": PackedFloat32Array(0.033333335, 3.9333334),
+"transitions": PackedFloat32Array(3.863751, 3.863751),
+"update": 0,
+"values": [Vector2(3.905, 3.94), Vector2(1.005, 1.115)]
+}
+tracks/13/type = "value"
+tracks/13/imported = false
+tracks/13/enabled = true
+tracks/13/path = NodePath(".:dissolve")
+tracks/13/interp = 1
+tracks/13/loop_wrap = true
+tracks/13/keys = {
+"times": PackedFloat32Array(5.266667, 9.966666),
+"transitions": PackedFloat32Array(1.3195081, 1.3195081),
+"update": 0,
+"values": [0.0, 1.0]
+}
+tracks/14/type = "value"
+tracks/14/imported = false
+tracks/14/enabled = true
+tracks/14/path = NodePath(".:play_dissolve")
+tracks/14/interp = 1
+tracks/14/loop_wrap = true
+tracks/14/keys = {
+"times": PackedFloat32Array(5.49276, 6.36276),
+"transitions": PackedFloat32Array(0.40612632, 0.40612632),
+"update": 0,
+"values": [0.0, 1.0]
+}
+tracks/15/type = "value"
+tracks/15/imported = false
+tracks/15/enabled = false
+tracks/15/path = NodePath("btnPlay:modulate")
+tracks/15/interp = 1
+tracks/15/loop_wrap = true
+tracks/15/keys = {
+"times": PackedFloat32Array(6.63),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/16/type = "value"
+tracks/16/imported = false
+tracks/16/enabled = true
+tracks/16/path = NodePath("btnPlay/RichTextLabel:self_modulate")
+tracks/16/interp = 1
+tracks/16/loop_wrap = true
+tracks/16/keys = {
+"times": PackedFloat32Array(6.07, 6.63),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_8ln24"]
+_data = {
+&"EnterMain": SubResource("Animation_8ln24"),
+&"RESET": SubResource("Animation_bqqt6"),
+&"Show": SubResource("Animation_wu84c")
+}
 
 [node name="MainMenu" type="Control" unique_id=2052804960]
 layout_mode = 3
@@ -25,9 +969,13 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_o1cif")
+
+[node name="ColorRect" type="ColorRect" parent="PanelContainer" unique_id=475772908]
+material = SubResource("ShaderMaterial_ekxnf")
+layout_mode = 2
 
 [node name="rtlTitle" type="RichTextLabel" parent="PanelContainer" unique_id=940309347]
+visible = false
 custom_minimum_size = Vector2(1100, 150)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -36,13 +984,259 @@ theme_override_font_sizes/normal_font_size = 56
 text = "Swipe Bite"
 horizontal_alignment = 1
 
-[node name="btnPlay" type="Button" parent="PanelContainer" unique_id=764427443]
+[node name="trectTitleMainShadow" type="TextureRect" parent="." unique_id=148058460]
+modulate = Color(1, 1, 1, 0)
+clip_children = 1
+layout_mode = 0
+offset_left = 10.0
+offset_top = 15.0
+offset_right = 1142.0
+offset_bottom = 394.0
+scale = Vector2(1, 1.15)
+pivot_offset = Vector2(566, 189)
+texture = ExtResource("3_wu84c")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="ColorRect" type="ColorRect" parent="trectTitleMainShadow" unique_id=1592313539]
+show_behind_parent = true
+material = SubResource("ShaderMaterial_8ln24")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="trectTitleMainGlow" type="TextureRect" parent="." unique_id=546730922]
+modulate = Color(1, 1, 1, 0)
+clip_children = 1
+layout_mode = 0
+offset_left = 5.0
+offset_top = 29.0
+offset_right = 1137.0
+offset_bottom = 408.0
+scale = Vector2(1.005, 1.115)
+pivot_offset = Vector2(566, 189)
+texture = ExtResource("3_bqqt6")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="ColorRect" type="ColorRect" parent="trectTitleMainGlow" unique_id=920584044]
+show_behind_parent = true
+material = SubResource("ShaderMaterial_rtw2f")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -471.6418
+offset_top = -295.9641
+offset_right = 461.0349
+offset_bottom = 360.01343
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ctrlEyes" type="Control" parent="." unique_id=1619338943]
+anchors_preset = 0
+offset_left = 576.0001
+offset_top = 324.0
+offset_right = 576.0001
+offset_bottom = 324.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Eye" parent="ctrlEyes" unique_id=1579502418 instance=ExtResource("2_ekxnf")]
+layout_mode = 1
+offset_left = -550.0
+offset_top = -255.0
+offset_right = -38.0
+offset_bottom = 1.0
+scale = Vector2(0.25, 0.25)
+
+[node name="Eye2" parent="ctrlEyes" unique_id=739039343 instance=ExtResource("2_ekxnf")]
+layout_mode = 1
+offset_left = 90.0
+offset_top = -314.0
+offset_right = 602.0
+offset_bottom = -58.0
+scale = Vector2(0.25, 0.25)
+
+[node name="Eye3" parent="ctrlEyes" unique_id=1242577008 instance=ExtResource("2_ekxnf")]
+layout_mode = 1
+offset_left = 204.0
+offset_top = -48.0
+offset_right = 716.0
+offset_bottom = 208.0
+scale = Vector2(0.25, 0.25)
+
+[node name="Eye4" parent="ctrlEyes" unique_id=98520568 instance=ExtResource("2_ekxnf")]
+layout_mode = 1
+offset_left = -4.0
+offset_top = 85.0
+offset_right = 508.0
+offset_bottom = 341.0
+scale = Vector2(0.25, 0.25)
+
+[node name="Eye5" parent="ctrlEyes" unique_id=1739802665 instance=ExtResource("2_ekxnf")]
+layout_mode = 1
+offset_left = -22.0
+offset_top = -130.0
+offset_right = 490.0
+offset_bottom = 126.0
+scale = Vector2(0.25, 0.25)
+
+[node name="Eye6" parent="ctrlEyes" unique_id=1307003519 instance=ExtResource("2_ekxnf")]
+layout_mode = 1
+offset_left = -753.0
+offset_top = 79.0
+offset_right = -241.0
+offset_bottom = 335.0
+scale = Vector2(0.25, 0.25)
+
+[node name="Eye7" parent="ctrlEyes" unique_id=1096503718 instance=ExtResource("2_ekxnf")]
+layout_mode = 1
+offset_left = -746.0
+offset_top = -57.0
+offset_right = -234.0
+offset_bottom = 199.0
+scale = Vector2(0.25, 0.25)
+
+[node name="Eye8" parent="ctrlEyes" unique_id=361443640 instance=ExtResource("2_ekxnf")]
+layout_mode = 1
+offset_left = -611.0
+offset_top = -34.0
+offset_right = -99.0
+offset_bottom = 222.0
+scale = Vector2(0.25, 0.25)
+
+[node name="Eye9" parent="ctrlEyes" unique_id=1675549270 instance=ExtResource("2_ekxnf")]
+layout_mode = 1
+offset_left = -711.0
+offset_top = -318.0
+offset_right = -199.0
+offset_bottom = -62.0
+scale = Vector2(0.25, 0.25)
+
+[node name="Eye10" parent="ctrlEyes" unique_id=968359032 instance=ExtResource("2_ekxnf")]
+layout_mode = 1
+offset_left = -405.0
+offset_top = -265.0
+offset_right = 107.0
+offset_bottom = -9.0
+scale = Vector2(0.25, 0.25)
+
+[node name="Eye11" parent="ctrlEyes" unique_id=472493799 instance=ExtResource("2_ekxnf")]
+layout_mode = 1
+offset_left = -423.0
+offset_top = 44.0
+offset_right = 89.0
+offset_bottom = 300.0
+scale = Vector2(0.25, 0.25)
+
+[node name="Eye12" parent="ctrlEyes" unique_id=311738483 instance=ExtResource("2_ekxnf")]
+layout_mode = 1
+offset_left = -88.0
+offset_top = -265.0
+offset_right = 424.0
+offset_bottom = -9.0
+scale = Vector2(0.25, 0.25)
+
+[node name="Eye13" parent="ctrlEyes" unique_id=1502183842 instance=ExtResource("2_ekxnf")]
+layout_mode = 1
+offset_left = -502.0
+offset_top = -357.0
+offset_right = 10.0
+offset_bottom = -101.0
+scale = Vector2(0.25, 0.25)
+
+[node name="Eye14" parent="ctrlEyes" unique_id=1646259564 instance=ExtResource("2_ekxnf")]
+layout_mode = 1
+offset_left = 256.0
+offset_top = -366.0
+offset_right = 768.0
+offset_bottom = -110.0
+scale = Vector2(0.25, 0.25)
+
+[node name="Eye15" parent="ctrlEyes" unique_id=38119225 instance=ExtResource("2_ekxnf")]
+layout_mode = 1
+offset_left = 297.0
+offset_top = 34.0
+offset_right = 809.0
+offset_bottom = 290.0
+scale = Vector2(0.25, 0.25)
+
+[node name="Eye16" parent="ctrlEyes" unique_id=2029134634 instance=ExtResource("2_ekxnf")]
+layout_mode = 1
+offset_left = 181.0
+offset_top = -230.0
+offset_right = 693.0
+offset_bottom = 26.0
+scale = Vector2(0.25, 0.25)
+
+[node name="Eye17" parent="ctrlEyes" unique_id=1748932803 instance=ExtResource("2_ekxnf")]
+layout_mode = 1
+offset_left = -490.0
+offset_top = -129.0
+offset_right = 22.0
+offset_bottom = 127.0
+scale = Vector2(0.25, 0.25)
+
+[node name="trectTitleMain" type="TextureRect" parent="." unique_id=2111512983]
+material = SubResource("ShaderMaterial_oa1go")
+layout_mode = 0
+offset_left = 10.0
+offset_top = 15.0
+offset_right = 1142.0
+offset_bottom = 394.0
+pivot_offset = Vector2(566, 189)
+texture = ExtResource("3_bqqt6")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="btnPlay" type="Button" parent="." unique_id=764427443]
+material = ExtResource("5_oa1go")
 custom_minimum_size = Vector2(120, 0)
-layout_mode = 2
+layout_mode = 0
+offset_left = 394.0
+offset_top = 403.0
+offset_right = 758.0
+offset_bottom = 611.0
 size_flags_horizontal = 4
 size_flags_vertical = 8
-theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 36
-text = "PLAY"
+theme_override_constants/outline_size = 16
+theme_override_font_sizes/font_size = 48
+theme_override_styles/normal = SubResource("StyleBoxEmpty_jk1qb")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_tbmy8")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_5dd4i")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_lgwnu")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_flqon")
+icon = ExtResource("6_tbmy8")
+icon_alignment = 1
+expand_icon = true
 
-[connection signal="pressed" from="PanelContainer/btnPlay" to="." method="_on_btn_play_pressed"]
+[node name="RichTextLabel" type="RichTextLabel" parent="btnPlay" unique_id=1814087624]
+self_modulate = Color(0, 0, 0, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/outline_size = 16
+theme_override_font_sizes/normal_font_size = 48
+text = "HUNT"
+fit_content = true
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="animPlayer" type="AnimationPlayer" parent="." unique_id=1719765892]
+libraries/ = SubResource("AnimationLibrary_8ln24")
+autoplay = &"Show"
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." unique_id=193502625]
+max_distance = 12310.0
+panning_strength = 0.0
+
+[connection signal="pressed" from="btnPlay" to="." method="_on_btn_play_pressed"]

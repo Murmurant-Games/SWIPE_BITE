@@ -17,5 +17,5 @@ shader_parameter/pixel_filter = 740.0
 shader_parameter/is_rotating = false
 shader_parameter/enabled = true
 shader_parameter/dithering = true
-shader_parameter/colors = 8
-shader_parameter/dither_size = 1
+shader_parameter/colors = 1
+shader_parameter/dither_size = 8

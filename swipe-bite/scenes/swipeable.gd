@@ -2,31 +2,34 @@ extends Control
 
 class_name Swipeable
 
+@export var portrait_dissolve : float = 1.0
+
 @onready var rtl_story_text: RichTextLabel = $pnlCard/Control/VBoxContainer/rtlStoryText
 @onready var pnl_card: PanelContainer = $pnlCard
 @onready var card_inital_pos : Vector2 = pnl_card.position
 @onready var choice_texts : Array[RichTextLabel] = [$rtlLeft, $rtlRight, $rtlUp]
 @onready var rtl_title: RichTextLabel = $pnlCard/Control/VBoxContainer/rtlTitle
 @onready var pnl_pic: PanelContainer = $pnlCard/Control/VBoxContainer/pnlPic
-@onready var rect_bg : ColorRect = $pnlCard/Control/VBoxContainer/pnlPic/trectPortrait/rectBG
-@onready var portrait_mat : ShaderMaterial = $pnlCard/Control/VBoxContainer/pnlPic/trectPortrait/rectBG.material
-@onready var trect_portrait: TextureRect = $pnlCard/Control/VBoxContainer/pnlPic/trectPortrait
+#@onready var rect_bg : ColorRect = $pnlCard/Control/VBoxContainer/pnlPic/PanelContainer/rectBG
+@onready var portrait_mat : ShaderMaterial = pnl_card.material
+@onready var trect_card_bg: TextureRect = $pnlCard/pnlCardBG/trectCardBG
+@onready var card_bg_mat : ShaderMaterial = trect_card_bg.material
+@onready var trect_portrait: TextureRect = $pnlCard/Control/VBoxContainer/pnlPic/TextureRect/trectPortrait
+@onready var character_mat : ShaderMaterial = trect_portrait.material
 @onready var anim_player: AnimationPlayer = $animPlayer
 @onready var pnl_stylebox : StyleBoxFlat = $pnlCard.get_theme_stylebox("panel")
 @onready var rtl_lore: RichTextLabel = $pnlLore/rtlLore
 @onready var pnl_lore: PanelContainer = $pnlLore
 
-var portraits = [	#preload("uid://d0aqgef4xhl2l"),
-					#preload("uid://dfdnaqkhqai8c"),
-					#preload("uid://jh2qwycs2rd"),
-					#preload("uid://djddjnv5hjxb3"),
-					#preload("uid://dv77bhn6jpk66")
-					preload("uid://cqj6wnt6ja5wb"),
-					preload("uid://ltcuq17ipgf4"),
-					preload("uid://cjqom6l11jsf4"),
-					preload("uid://cqqjxidv2sjye")
-					
-					]
+
+var card_bgs : Array = [
+	preload("res://art/Card1.jpg"),
+	preload("res://art/Card2.jpg"),
+	preload("res://art/Card3.jpg"),
+	preload("res://art/Card4.jpg"),
+	preload("res://art/Card5.jpg"),
+	preload("res://art/Card6.jpg")
+]
 
 var is_dragging : bool = false
 var text = ""
@@ -42,6 +45,7 @@ func setup(story : InkPlayer):
 	tags = []
 	lines = []
 	character_data = {}
+	var humanity_delta = Global.main.get_humanity_delta()
 	Global.current_swipeable = self
 	if story.get_can_continue():
 		
@@ -62,16 +66,35 @@ func setup(story : InkPlayer):
 		for line : String in lines:
 			#line = line.replace("\n", "")
 			#print("Line = " + line)
-			if line.to_lower().ends_with("[lore]\n"):
-				print("Found lore")
+			var lower_line = line.to_lower()
+			if lower_line.ends_with("[lore]\n"):
+				#print("Found lore")
 				character_data["lore"] = line.replace("[lore]", "")
-			if line.to_lower().ends_with("[bio]\n"):
-				print("Found bio")
+			if lower_line.ends_with("[bio]\n"):
+				#print("Found bio")
 				character_data["bio"] = line.replace("[bio]", "")
 				#print("Found bio: " + line)
-			if line.to_lower().ends_with("[title]\n"):
-				print("Found title")
+			if lower_line.ends_with("[title]\n"):
+				#print("Found title")
 				character_data["title"] = line.replace("[title]", "")
+			if lower_line.ends_with("[pronoun]\n"):
+				#print("Found pronoun")
+				character_data["pronoun"] = line.replace("[pronoun]", "")
+			if lower_line.contains("[stats-avoid]"):
+				character_data["avoid"] = line.replace("[stats-avoid]", "")
+			if lower_line.contains("[stats-pursue]"):
+				character_data["pursue"] = line.replace("[stats-pursue]", "")
+			if lower_line.contains("[night]"):
+				line = line.replace("[night]", "")
+				#print("Encountered night.")
+			if lower_line.contains("[warning]"):
+				line = line.replace("[warning]", "")
+				#print("Encountered warning.")
+			if lower_line.contains("[explain]"):
+				line = line.replace("[explain]", "")
+				#print("Encountered explain.")
+				
+			
 			
 		txt = txt.replace("[br]", "\n")
 			
@@ -81,7 +104,7 @@ func setup(story : InkPlayer):
 			rtl_story_text.text = Global.main.get_hunger_bbcode() + character_data["bio"]
 		else:
 			rtl_story_text.text = Global.main.get_hunger_bbcode() + txt
-			print("No bio 1: [" + txt + "]")
+			#print("No bio 1: [" + txt + "]")
 		
 		if character_data.has("lore"):
 				tagless_text = Utils.text_without_tags(character_data["lore"])
@@ -99,22 +122,31 @@ func setup(story : InkPlayer):
 			else:
 				rtl_title.text += Names.random_name()
 			pnl_pic.visible = true
-			rect_bg.self_modulate = Color(1, 1, 1, 1.0 - clampf((Utils.change_range(Global.main.get_humanity_delta(), 0.25, 0.75, 0, 1)), 0, 1))
+			#rect_bg.self_modulate = Color(1, 1, 1, 1.0 - clampf((Utils.change_range(humanity_delta, 0.25, 0.75, 0, 1)), 0, 1))
+			#rect_bg.self_modulate = Color(1, 1, 1, 1)
 			portrait_mat.set_shader_parameter("colour_1", Color(randf(), randf(), randf()))
 			portrait_mat.set_shader_parameter("colour_2", Color(randf(), randf(), randf()))
 			portrait_mat.set_shader_parameter("colour_3", Color(0, 0, 0))
-			trect_portrait.texture = portraits.pick_random() 
+			card_bg_mat.set_shader_parameter("tint", Color(randf_range(0.3, 0.7), randf_range(0.3, 0.7), randf_range(0.3, 0.7)))
+			trect_card_bg.texture = card_bgs.pick_random()
+			
+			
+			if character_data.has("pronoun"):
+				#print("Fetching portrait with pronoun: " + str(character_data["pronoun"]))
+				trect_portrait.texture = Portraits.get_portrait(character_data["pronoun"])
+			else:
+				trect_portrait.texture = Portraits.get_portrait()
 			trect_portrait.flip_h = randf() > 0.5
 			
 			pnl_stylebox.bg_color = Color(randf_range(0.1, 0.4), randf_range(0.1, 0.4), randf_range(0.1, 0.4))
-			
+			character_mat.get_shader_parameter("dissolve_texture").noise.seed = randi()
 			
 			
 		else:
 			pnl_stylebox.bg_color = Color(0.1, 0.1, 0.1)
 			rtl_title.visible = false
 			pnl_pic.visible = false
-			print("No bio 2")
+			#print("No bio 2")
 		
 		choice_texts.map(func(rtl): 
 			rtl.text = ""
@@ -145,8 +177,12 @@ func setup(story : InkPlayer):
 			var choice_txt = choices[index].get_text()
 			if choice_txt.begins_with("SPARE / AVOID"):
 				choice_txt = "Avoid"
+				if character_data.has("avoid"):
+					choice_txt += "\n" + character_data["avoid"]
 			if choice_txt.begins_with("FEED / FACE"):
 				choice_txt = "Pursue"
+				if character_data.has("pursue"):
+					choice_txt += "\n" + character_data["pursue"]
 			choice_texts[index].text = choice_txt
 	else:
 		rtl_lore.text = "done"
@@ -168,6 +204,9 @@ func _process(delta: float) -> void:
 		pnl_card.rotation_degrees = 0
 		
 	pnl_card.position.x = lerpf(pnl_card.position.x, card_target_pos.x, pos_smoothing_factor)
+	
+	if anim_player.is_playing():
+		character_mat.set_shader_parameter("dissolve_value", portrait_dissolve)
 	
 func start_drag():
 	is_dragging = true
@@ -211,7 +250,7 @@ func skip():
 	if not all_text_visible:
 		rtl_lore.visible_characters = rtl_lore.text.length()
 		all_text_visible = true
-		anim_player.seek(1.0, true)
+		anim_player.seek(2.0, true)
 		on_all_text_visible()
 
 func _on_button_button_up() -> void:
@@ -228,6 +267,12 @@ func should_skip(story, txt : String, tags) -> bool:
 			story.choose_choice_index(0)
 		return true
 	if txt == "\n":
+		return true
+	if txt.ends_with("[stats-pursue]\n"):
+		return true
+	if txt.ends_with("[pronoun]\n"):
+		return true
+	if txt.ends_with("[explainer]\n"):
 		return true
 	if txt.ends_with("[bio]\n"):
 		return true

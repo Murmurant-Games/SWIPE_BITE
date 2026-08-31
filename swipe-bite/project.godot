@@ -15,12 +15,17 @@ run/main_scene="uid://q32xx74prj6g"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[audio]
+
+buses/default_bus_layout="uid://cdo671lpbedpb"
+
 [autoload]
 
 __InkRuntime="*uid://bg3qi740b6sjm"
 Global="*uid://bfs87g12xbclg"
 Utils="*uid://cm8t8nfl7fuwk"
 Names="*uid://dcyvxcr0jnnx0"
+Portraits="*uid://djg5ecayufrm6"
 
 [display]
 

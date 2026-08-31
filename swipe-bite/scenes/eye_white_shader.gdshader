@@ -131,7 +131,7 @@ void fragment() {
 	COLOR.r = reduce_color(raw.r, (dithering_value - 0.5) * dithering_value + 0.5, colors - 1);
 	COLOR.g = reduce_color(raw.g, (dithering_value - 0.5) * dithering_value + 0.5, colors - 1);
 	COLOR.b = reduce_color(raw.b, (dithering_value - 0.5) * dithering_value + 0.5, colors - 1);
-	COLOR.a = max(min_alpha, (COLOR.r + COLOR.g + COLOR.b) / 3.0);
+	COLOR.a = colour_3.a;
 //
 	//int x = int(FRAGCOORD.x) % 512;
 	//int y = int(FRAGCOORD.y) % 512;

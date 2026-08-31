@@ -21,6 +21,7 @@ var human_colours = [Color(0.03, 0, 0.4), Color(0.56, 0, 0.53), Color(0, 0, 0)]
 @onready var audio_bgm: AudioStreamPlayer2D = $audioBGM
 @onready var rect_bg: ColorRect = $ctrlBG/rectBG
 @onready var bg_mat: ShaderMaterial = rect_bg.material
+@onready var anim_player: AnimationPlayer = $animPlayer
 
 func _ready() -> void:
 	story.connect("loaded", on_story_loaded)
@@ -55,6 +56,7 @@ func on_story_loaded(successfully : bool):
 	print(story.get_variable("cards"))
 
 func setup():
+	anim_player.play("Show")
 	hbox_stats.get_children().map(func(x): x.queue_free())
 	story.reset()
 	stat_names.map(func(stat_name): 

@@ -3,11 +3,11 @@
 [ext_resource type="Script" uid="uid://b8x2aur6fg6gb" path="res://scenes/eye.gd" id="1_60o0r"]
 [ext_resource type="Texture2D" uid="uid://ch1b4xa388nnc" path="res://art/eye.png" id="1_xbsf0"]
 [ext_resource type="Material" uid="uid://r4hc37of0b55" path="res://scenes/eye_white_mat.tres" id="2_e6m2j"]
-[ext_resource type="Texture2D" uid="uid://dfdnaqkhqai8c" path="res://art/portraits/cabal_good.png" id="2_hrmh8"]
+[ext_resource type="Texture2D" uid="uid://cce11jqed8pyr" path="res://art/eye_rim.png" id="5_7wf7k"]
 
 [sub_resource type="Gradient" id="Gradient_60o0r"]
-offsets = PackedFloat32Array(0.318, 0.437, 0.68715084, 0.902, 0.927)
-colors = PackedColorArray(0, 0, 0, 1, 0.23828125, 0.030279167, 0.014265175, 1, 0.42998493, 0.014249019, 0.029348183, 1, 0.60038817, 0, 0.042755302, 1, 0, 0, 0, 0)
+offsets = PackedFloat32Array(0.318, 0.437, 0.69310343, 0.902, 0.927)
+colors = PackedColorArray(0, 0, 0, 1, 0.23921569, 0.22745098, 0.24705882, 1, 0.43137255, 0.42745098, 0.42745098, 1, 0.6, 0.57254905, 0.5921569, 1, 0, 0, 0, 0)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_o1cif"]
 gradient = SubResource("Gradient_60o0r")
@@ -154,15 +154,9 @@ grow_vertical = 2
 pivot_offset = Vector2(256, 128)
 script = ExtResource("1_60o0r")
 
-[node name="CabalGood" type="Sprite2D" parent="." unique_id=262577167]
-visible = false
-position = Vector2(269, 117)
-scale = Vector2(6.234375, 4.7272725)
-texture = ExtResource("2_hrmh8")
-
 [node name="trectWhite" type="TextureRect" parent="." unique_id=296292872]
 modulate = Color(1, 1, 1, 0)
-clip_children = 1
+clip_children = 2
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -176,6 +170,7 @@ offset_bottom = 86.5
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(128, 86)
+mouse_filter = 0
 texture = ExtResource("1_xbsf0")
 
 [node name="trectRetina" type="TextureRect" parent="trectWhite" unique_id=520087930]
@@ -192,6 +187,7 @@ offset_bottom = 75.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(75, 75)
+mouse_filter = 2
 texture = SubResource("GradientTexture2D_o1cif")
 
 [node name="ColorRect" type="ColorRect" parent="trectWhite/trectRetina" unique_id=1696352742]
@@ -202,7 +198,16 @@ offset_left = -118.0
 offset_top = -84.0
 offset_right = 274.0
 offset_bottom = 246.0
+mouse_filter = 2
 color = Color(1, 0.043873906, 0, 1)
+
+[node name="TextureRect" type="TextureRect" parent="trectWhite" unique_id=2049250990]
+custom_minimum_size = Vector2(256, 173)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+pivot_offset = Vector2(128, 86)
+texture = ExtResource("5_7wf7k")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1415735094]
 libraries/ = SubResource("AnimationLibrary_hrmh8")

@@ -1,8 +1,10 @@
 [gd_scene format=3 uid="uid://burecohv2qxav"]
 
 [ext_resource type="Script" uid="uid://1uk0batu6gp6" path="res://scenes/swipeable.gd" id="1_ujlfe"]
-[ext_resource type="Texture2D" uid="uid://dfdnaqkhqai8c" path="res://art/portraits/cabal_good.png" id="2_801ac"]
+[ext_resource type="Material" uid="uid://cq3v4wmoaqft2" path="res://scenes/card_bg_mat.tres" id="3_6q52b"]
+[ext_resource type="Texture2D" uid="uid://muon5t8qhega" path="res://art/portraits/FP_1.png" id="3_66vuy"]
 [ext_resource type="Material" uid="uid://hirc7vyjy7kn" path="res://scenes/portrat_bg_mat.tres" id="3_gdr0j"]
+[ext_resource type="Texture2D" uid="uid://cj6pjafgda6b8" path="res://art/Card2.jpg" id="4_6q52b"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ujlfe"]
 content_margin_left = 8.0
@@ -20,21 +22,155 @@ corner_radius_top_right = 12
 corner_radius_bottom_right = 12
 corner_radius_bottom_left = 12
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qqt24"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qqt24"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o1cif"]
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
-
 [sub_resource type="Gradient" id="Gradient_gdr0j"]
-colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 0)
+offsets = PackedFloat32Array(0.93448275, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_o1cif"]
 gradient = SubResource("Gradient_gdr0j")
-fill_from = Vector2(0.5, 1)
-fill_to = Vector2(0.5, 0)
+width = 128
+height = 128
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[sub_resource type="Shader" id="Shader_6q52b"]
+code = "shader_type canvas_item;
+
+#define MAXCOLORS 16
+
+uniform sampler2D dissolve_texture : source_color;
+uniform float dissolve_value : hint_range(0,1);
+uniform float burn_size: hint_range(0.0, 1.0, 0.01);
+uniform vec4 burn_color: source_color;
+
+uniform bool enabled = true;
+uniform bool dithering = true;
+uniform int colors : hint_range(1, MAXCOLORS) = 8;
+uniform int dither_size: hint_range(1, 8) = 2;
+
+float dithering_pattern(ivec2 fragcoord) {
+	const float pattern[] = {
+		0.00, 0.50, 0.10, 0.65, 
+		0.75, 0.25, 0.90, 0.35, 
+		0.20, 0.70, 0.05, 0.50, 
+		0.95, 0.40, 0.80, 0.30
+	};
+	
+	int x = fragcoord.x % 4;
+	int y = fragcoord.y % 4;
+	
+	return pattern[y * 4 + x];
+}
+
+#define SPIN_EASE 1.0
+
+float reduce_color(float raw, float dither, int depth) {
+	float div = 1.0 / float(depth);
+	float val = 0.0;
+	int i = 0;
+
+	while (i <= MAXCOLORS)
+	{
+		if (raw > div * (float(i + 1))) {
+			i = i + 1;
+			continue;
+		}
+
+		if (raw * float(depth) - float(i) <= dither * 0.999)
+		{
+			val = div * float(i);
+		} 
+		else
+		{
+			val = div * float(i + 1);
+		}
+		return val;
+
+		i = i+1;
+	}
+
+	return val;
+}
+
+const float ps1_dither[16] = float[16](
+	-4.0, 0.0, -3.0, 0.0,
+	2.0, -2.0, 3.0, -1.0,
+	-3.0, 1.0, -4.0, 0.0,
+	3.0, -1.0, 2.0, -2.0
+);
+
+
+void fragment() {
+    vec2 uv = UV;
+	
+	vec4 main_texture = texture(TEXTURE, UV);
+    vec4 noise_texture = texture(dissolve_texture, UV);
+	
+	float burn_size_step = burn_size * step(0.001, dissolve_value) * step(dissolve_value, 0.999);
+	float threshold = smoothstep(noise_texture.x-burn_size_step, noise_texture.x, dissolve_value);
+	float border = smoothstep(noise_texture.x, noise_texture.x + burn_size_step, dissolve_value);
+	
+	
+	vec4 tex = main_texture;
+	
+	tex.a *= threshold;
+
+	tex.rgb = mix(burn_color.rgb, main_texture.rgb, border);
+	
+	vec4 screen_colour = tex;
+	vec4 raw = screen_colour;
+	ivec2 iuv = ivec2(FRAGCOORD.xy / float(dither_size));
+
+	float dithering_value = 1.0;
+	if (dithering)
+	{
+		dithering_value = dithering_pattern(iuv);
+	}
+	
+	vec4 dithered_color = vec4(0, 0, 0, 1);
+	
+	dithered_color.r = reduce_color(raw.r, (dithering_value - 0.5) * dithering_value + 0.5, colors - 1);
+	dithered_color.g = reduce_color(raw.g, (dithering_value - 0.5) * dithering_value + 0.5, colors - 1);
+	dithered_color.b = reduce_color(raw.b, (dithering_value - 0.5) * dithering_value + 0.5, colors - 1);
+	
+	dithered_color.a = tex.a;
+	
+	COLOR = dithered_color;
+}
+"
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_rtw2f"]
+seed = 10
+frequency = 0.0003
+fractal_octaves = 4
+fractal_lacunarity = 4.07
+fractal_gain = -1.735
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_jlnis"]
+width = 128
+height = 128
+noise = SubResource("FastNoiseLite_rtw2f")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_h24x7"]
+shader = SubResource("Shader_6q52b")
+shader_parameter/dissolve_texture = SubResource("NoiseTexture2D_jlnis")
+shader_parameter/dissolve_value = 1.0
+shader_parameter/burn_size = 0.02999999932944
+shader_parameter/burn_color = Color(1, 1, 1, 1)
+shader_parameter/enabled = true
+shader_parameter/dithering = true
+shader_parameter/colors = 4
+shader_parameter/dither_size = 1
 
 [sub_resource type="Animation" id="Animation_ujlfe"]
 length = 0.001
@@ -89,7 +225,7 @@ tracks/3/keys = {
 tracks/4/type = "value"
 tracks/4/imported = false
 tracks/4/enabled = true
-tracks/4/path = NodePath("pnlCard/Control/VBoxContainer/pnlPic/trectPortrait/rectBG:self_modulate")
+tracks/4/path = NodePath("pnlCard/Control/VBoxContainer/pnlPic/TextureRect:self_modulate")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
@@ -101,18 +237,19 @@ tracks/4/keys = {
 tracks/5/type = "value"
 tracks/5/imported = false
 tracks/5/enabled = true
-tracks/5/path = NodePath("pnlCard/Control/VBoxContainer/pnlPic/PanelContainer/TextureRect:self_modulate")
+tracks/5/path = NodePath(".:portrait_dissolve")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Color(1, 1, 1, 1)]
+"values": [1.0]
 }
 
 [sub_resource type="Animation" id="Animation_801ac"]
 resource_name = "show"
+length = 2.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -127,24 +264,24 @@ tracks/0/keys = {
 }
 tracks/1/type = "value"
 tracks/1/imported = false
-tracks/1/enabled = false
-tracks/1/path = NodePath("pnlCard/Control/VBoxContainer/pnlPic/trectPortrait/rectBG:self_modulate")
+tracks/1/enabled = true
+tracks/1/path = NodePath("pnlCard/Control/VBoxContainer/pnlPic/TextureRect/trectPortrait:modulate")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0.3, 0.5),
+"times": PackedFloat32Array(0.6, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 1)]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath("pnlCard/Control/VBoxContainer/pnlPic/trectPortrait:modulate")
+tracks/2/path = NodePath("pnlCard/Control/VBoxContainer/pnlPic/TextureRect:self_modulate")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(0.6, 1),
+"times": PackedFloat32Array(0.2, 0.7),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
@@ -152,14 +289,14 @@ tracks/2/keys = {
 tracks/3/type = "value"
 tracks/3/imported = false
 tracks/3/enabled = true
-tracks/3/path = NodePath("pnlCard/Control/VBoxContainer/pnlPic/PanelContainer/TextureRect:self_modulate")
+tracks/3/path = NodePath(".:portrait_dissolve")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
-"times": PackedFloat32Array(0.2, 0.7),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0.56666666, 1.9333333),
+"transitions": PackedFloat32Array(1.5691688, 1.5691688),
 "update": 0,
-"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+"values": [0.0, 1.0]
 }
 
 [sub_resource type="Animation" id="Animation_gdr0j"]
@@ -235,6 +372,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="pnlCard" type="PanelContainer" parent="." unique_id=2007881664]
+material = ExtResource("3_gdr0j")
 custom_minimum_size = Vector2(250, 400)
 layout_mode = 1
 anchors_preset = 8
@@ -242,14 +380,26 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -125.0
+offset_left = -132.06242
 offset_top = -150.0
-offset_right = 125.0
-offset_bottom = 262.99982
+offset_right = 132.06242
+offset_bottom = 262.99976
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(100, 300)
 theme_override_styles/panel = SubResource("StyleBoxFlat_ujlfe")
+
+[node name="pnlCardBG" type="PanelContainer" parent="pnlCard" unique_id=1306592391]
+clip_children = 1
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_qqt24")
+
+[node name="trectCardBG" type="TextureRect" parent="pnlCard/pnlCardBG" unique_id=844439402]
+material = ExtResource("3_6q52b")
+layout_mode = 2
+texture = ExtResource("4_6q52b")
+expand_mode = 3
+stretch_mode = 5
 
 [node name="Control" type="Control" parent="pnlCard" unique_id=1316311153]
 layout_mode = 2
@@ -279,37 +429,27 @@ custom_minimum_size = Vector2(100, 200)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_qqt24")
 
-[node name="PanelContainer" type="PanelContainer" parent="pnlCard/Control/VBoxContainer/pnlPic" unique_id=1635285163]
+[node name="TextureRect" type="TextureRect" parent="pnlCard/Control/VBoxContainer/pnlPic" unique_id=2957399]
 clip_children = 1
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_o1cif")
-
-[node name="ColorRect" type="ColorRect" parent="pnlCard/Control/VBoxContainer/pnlPic/PanelContainer" unique_id=1812080756]
-visible = false
-layout_mode = 2
-
-[node name="TextureRect" type="TextureRect" parent="pnlCard/Control/VBoxContainer/pnlPic/PanelContainer" unique_id=2957399]
 layout_mode = 2
 texture = SubResource("GradientTexture2D_o1cif")
 
-[node name="trectPortrait" type="TextureRect" parent="pnlCard/Control/VBoxContainer/pnlPic" unique_id=1155885482]
-clip_children = 2
+[node name="trectPortrait" type="TextureRect" parent="pnlCard/Control/VBoxContainer/pnlPic/TextureRect" unique_id=1155885482]
 texture_filter = 1
-layout_mode = 2
-texture = ExtResource("2_801ac")
+material = SubResource("ShaderMaterial_h24x7")
+layout_mode = 0
+offset_right = 248.0
+offset_bottom = 200.0
+texture = ExtResource("3_66vuy")
 expand_mode = 2
 stretch_mode = 5
-
-[node name="rectBG" type="ColorRect" parent="pnlCard/Control/VBoxContainer/pnlPic/trectPortrait" unique_id=919141492]
-material = ExtResource("3_gdr0j")
-layout_mode = 0
-offset_right = 234.0
-offset_bottom = 200.0
 
 [node name="rtlStoryText" type="RichTextLabel" parent="pnlCard/Control/VBoxContainer" unique_id=1909863562]
 clip_contents = false
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/normal_font_size = 20
 bbcode_enabled = true
 text = "asdasdasd"
 fit_content = true
@@ -332,6 +472,9 @@ offset_bottom = 20.0
 grow_vertical = 2
 bbcode_enabled = true
 text = "Left"
+fit_content = true
+scroll_active = false
+scroll_following = true
 horizontal_alignment = 2
 
 [node name="rtlRight" type="RichTextLabel" parent="." unique_id=1925841073]
@@ -349,6 +492,9 @@ grow_horizontal = 0
 grow_vertical = 2
 bbcode_enabled = true
 text = "Right"
+fit_content = true
+scroll_active = false
+scroll_following = true
 
 [node name="rtlUp" type="RichTextLabel" parent="." unique_id=1923106442]
 layout_mode = 1
@@ -365,6 +511,9 @@ grow_horizontal = 0
 grow_vertical = 2
 bbcode_enabled = true
 text = "Up"
+fit_content = true
+scroll_active = false
+scroll_following = true
 horizontal_alignment = 1
 
 [node name="animPlayer" type="AnimationPlayer" parent="." unique_id=640789019]
