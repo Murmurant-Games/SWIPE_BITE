@@ -272,8 +272,8 @@ func should_skip(story, txt : String, tags) -> bool:
 		return true
 	if txt.ends_with("[pronoun]\n"):
 		return true
-	if txt.ends_with("[explainer]\n"):
-		return true
+	#if txt.ends_with("[explainer]\n"):
+		#return true
 	if txt.ends_with("[bio]\n"):
 		return true
 	if txt.ends_with("[title]\n"):
