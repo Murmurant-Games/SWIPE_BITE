@@ -23,6 +23,8 @@
         -experienced_hunter:
                 Hunger +2, Heat -3
 
+        -handy_andy:
+                Hunger -1, Humanity -2
 
         -thrall:
                 Hunger -1, Humanity -2
@@ -40,7 +42,7 @@
                 Heat -2, Humanity -1
 
         - former_flame:
-                Humanity -3, Hunger -2, Heat +2
+                Humanity -2, Hunger -2
                    
         - goth:
                 Humanity +1, Hunger -1
@@ -84,9 +86,10 @@
 
                 Heat +2
 
-        -thrall:
+        -handy_andy:
                 Hunger +1
-
+        -thrall:
+                Hunger +1, Heat -2, Humanity -1
                        
         -douche:
             Hunger +1
@@ -99,7 +102,7 @@
             Humanity +2
                 
         - former_flame:
-            Humanity +2, Hunger +1
+            Humanity +1, Hunger +1
                    
         - goth:
             Hunger +1

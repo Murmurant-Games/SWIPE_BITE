@@ -75,7 +75,7 @@
                 
             - else:
                 ~ alter(hunger,1)
-                ~ alter(heat,-1)
+                ~ alter(heat,-2)
                 ~ alter(humanity,-1)
                 ~ tomorrow_night += thrall
                 }       
@@ -110,12 +110,11 @@
                 }
         - former_flame:
             {feed:
-                ~ alter(humanity,-3)
+                ~ alter(humanity,-2)
                 ~ alter(hunger,-2)
-                ~ alter(heat,2)
                 ~ tomorrow_night += ghost
             - else:
-                ~ alter(humanity,2)
+                ~ alter(humanity,1)
                 ~ alter(hunger,1)
                 ~ tomorrow_night += former_flame
                 }   

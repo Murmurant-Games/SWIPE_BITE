@@ -14,8 +14,14 @@ INCLUDE swipe_bite_card_effects_print.ink
 VAR hunger = 5
 VAR humanity = 10
 VAR heat = 0
-VAR health = 10
 
+VAR hunger_end_trigger = 10
+VAR humanity_end_trigger = 0
+VAR heat_end_trigger = 10
+
+VAR hhh_warning_threshold = 3
+
+VAR health = 10
 VAR sanity = 5
 VAR security = 5
 
@@ -60,7 +66,7 @@ Swipe...
 You are a vampire.[br]They are your opportunities.[br]Face them and Feed, or Avoid them and Hunger. Some encounters will erode your humanity. Some will bring unwanted attention. [explainer]
 ->continue->
 
-If your Humanity drops to 0 you will lose yourself.[br]If your Hunger reaches 10 you will perish.[br]If your Heat reaches 10 you will be revealed.[br][br]Stay hidden and stay fed to survive... hold on to your humanity if you can. [explainer]
+If your Humanity drops to {humanity_end_trigger} you will lose yourself.[br]If your Hunger reaches {hunger_end_trigger} you will perish.[br]If your Heat reaches {heat_end_trigger} you will be revealed.[br][br]Stay hidden and stay fed to survive... hold on to your humanity if you can. [explainer]
 ->continue->
 
 ->->
@@ -80,12 +86,12 @@ Memories of your turning twist like sweat-soaked sheets. Flashes of acid clarity
 -
 
 + [You're Afraid]
-+ [You're excited]
++ [You're Excited]
 
 -
 That's when you knew you weren't human anymore. [br][br]What are you?
-+ [I'm human] //#+1 Hunger +1 Humanity
-+ [I'm a vampire] //#-1 Hunger -1 Humanity
++ [I'm Human] //#+1 Hunger +1 Humanity
++ [I'm a Vampire] //#-1 Hunger -1 Humanity
 -
 ->->
 
