@@ -55,7 +55,7 @@
 
 === function hunter_lore()
 {~ Buff but his eyes are haunted.| He's not looking for a date, he's looking for revenge.}
-<> {~ The red flags you can't ignore.| } 
+<> {~ The red flags you can't ignore.|The message is meant for you.} 
 
 === function another_hunter_lore()
 {~ Buff but his eyes are haunted.| He's not looking for a date, he's looking for revenge.}

@@ -10,6 +10,12 @@
             
         -hunter:
             ~ hunter_name()
+            
+        -another_hunter:
+            ~hunter_name()
+        
+        -experienced_hunter:
+            ~hunter_name()
                       
         -thrall:
             ~ thrall_name()
@@ -78,40 +84,35 @@
 
     
 === function douche_name()
-{~ Bobby |Jeff }
+{~ Milf Hunter|Chad|Maxxx|Stubbie|Mike the Stud|Jimmy Bones|Hog Dog|The One|Fred|Mr D|Tongue Twister}
 
 === function normie_name()
-{~ Bobby |Jeff }
+{~ Martin |Jeff |Paul B| Mike|James M|James L|Marty|Tom|Thom|Tommy|Siv|Marlon|Khanya}
 
 === function cheater_name()
-{~ Bobby |Jeff }
+{~ Mystery Man|John Doe|Obvious Alias|Mr Bigshot|The Don}
 
 === function hunter_name()
-{~ Bobby |Jeff }
+{~ Hunter|Ranger|Van|Helsing|Snipes|Wesley|Blade|Buffy|Belmont}
 
-=== function another_hunter_name()
-{~ Bobby |Jeff }
-
-=== function experienced_hunter_name()
-{~ Bobby |Jeff }
 
 === function innocent_name()
-{~ Bobby |Jeff }
+{~ Gemma|Lily|Sunny|Wynona}
 
 === function thrall_name()
-{~ Bobby |Jeff }
+{~ Guy|Handy Man|Dan|Wes|The Hammer}
 
 === function gym_bro_name()
-{~ Bobby |Jeff } 
+{~ Big Boy|Buff n Bronze|Jordan|Jett|Django|Joe|Spotter} 
 
 === function cryptid_name()
-{~ Bobby |Jeff }
+{~ Fisher|Frog Friend|Slime Time|Human Person}
 
 === function vampire_name()
-{~ Bobby |Jeff }
+{~ Exekiel|Sinestra|Mordechai|Moloch|Master|Dark Mistress|The Impaler|Bat Man}
 
 === function goth_name()
-{~ Bobby |Jeff }
+{~ Esmerelda|Vampire Girl|Dark Poet|Shadowheart|Starlit Eyes|Nyx|Jewel|Ruby}
 
 === function former_flame_name()
-{~ Bobby |Jeff }
+{~ Mal|Sam|Jem|Sy}
