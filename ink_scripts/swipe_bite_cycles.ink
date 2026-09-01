@@ -5,95 +5,69 @@
         -> hunger_ending
         }
     {hunger > 8:
-        You are growing hungrier, maddeningly hungry. [warning]
+        {once:
+            - You are growing hungrier, maddeningly hungry. [warning]
+                ->continue->
+        }
         }
     {humanity < 0:
         -> humanity_ending
         }
     {humanity < 2:
-        You are losing touch with you humanity. [warning]
+        {once:
+            - You are losing touch with you humanity. [warning]
+        ->continue->
+        }
         }
     {heat > 10:
         -> heat_ending
         }
     {heat > 8:
-        You are drawing too much attention. [warning]
+        {once:
+            - You are drawing too much attention. [warning]
+        ->continue->
+        }
         }
     {nights_lasted >= 5:
         -> survival_ending
         }
-/*
--> stat_adjust
-
-
-== stat_adjust
-    {hunger < 0:
-        ~ hunger = 0
-        }
-    {humanity > 10:
-        ~ humanity = 10
-        }
-    {heat < 0:
-        ~ heat = 0
-        }
-    {health > 10:
-        ~ health = 10
-        }
-
-->stat_display
-        
-== stat_display ==
-NIGHT: {nights_lasted} CARDS SEEN: {cards_seen} #DN_print
-... HUNGER: {hunger} HEAT: {heat} HUMANITY: {humanity} #DN_print
 
 -> random_encounter
-*/
--> random_encounter
+
 
 == begin_end_cycle
 
 ~ nights_lasted ++
-//NIGHT ENDS. INCREASE COUNTER, RESET DECK #DN_print
 
-//A night ends.
-//+ [Another begins]
 -
 
 {  nights_lasted:
     - 1:
-        ~ cards += (douche, normie, cheater, gym_bro)
     
+        Your first night hunting...
+        ~ cards += (douche, normie, normie2, cheater, gym_bro)
+        ->hunt
     -2:
-        ~ cards += (douche, normie, cheater, hunter, innocent, gym_bro, cryptid, former_flame)
-    
-        {hunters_avoided:
-            - 1:
-                ~ cards += (another_hunter)
-            }
+        Your second night...
+        ~ cards += (douche, normie, cheater, normie2, innocent, gym_bro, goth, former_flame)
             
     -3:
-        ~ cards += (douche, normie, cheater, hunter, innocent, goth, gym_bro, cryptid, former_flame)
-    
-        {hunters_avoided:
-            - 1:
-                ~ cards += (another_hunter)
-            - 2:
-                ~ cards += (another_hunter,experienced_hunter)
-            }
+        Three nights...
+        ~ cards += (douche, normie, cheater, hunter, handy_andy, innocent, goth, normie2)
+
     -else:
+        You survive another night.
         ~ cards += (douche, normie, cheater, hunter, innocent, goth, gym_bro, cryptid, former_flame)
     
-        {hunters_avoided:
-            - 1:
-                ~ cards += (another_hunter)
-            - 2:
-                ~ cards += (another_hunter,experienced_hunter)
-            }
     }
 
+    ~ cards += tomorrow_night
 //, cryptid, vampire, (goth), former_flame, ghost, your_sire, detective, mortal_lover
 
-A night ends with an orange bruise.[br][br]You sleep until the horrid eye of the sun closes and the silver, blind moon's is open. [night]
+
+<> It ends with {~an orange bruise of sunrise|an overcast sky|pouring rain soaking the streets|the smell of blood|pain|horror|hunger|exhaustion|a muffled scream}.[br][br]You sleep until {~the horrid eye of the sun closes and the silver, blind moon's is open|hunger wakes you|nightmares drive you from your bed|the pings of your phone can no longer be ignored|the howl of a cat wakes you}. [night]
+-(hunt)
+    ~ tomorrow_night = ()
 + [HUNT]
 + [HUNT]
 -

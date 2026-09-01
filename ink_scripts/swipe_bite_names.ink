@@ -1,9 +1,36 @@
-
+/*
+- [X] douche
+- [X] normie
+- [X] normie2
+- [X] cheater
+- [X] hunter
+- [X] innocent
+- [X] handy_andy
+- [X] thrall
+- [X] gym_bro
+- [X] cryptid
+- [X] vampire
+- [X] goth
+- [X] former_flame
+- [X] ghost
+- [ ] your_sire
+- [ ] detective
+- [X] mortal_lover
+- [X] another_hunter
+- [X] experienced_hunter
+- [ ] bookworm
+- [ ] nice_guy
+- [ ] sleaze
+- [ ] stalker
+- [ ] priest
+*/
 == print_name(character)
 
     { character:
         -normie:
             ~ normie_name()
+        -normie2:
+            ~ normie_name()   
             
         -innocent:
             ~ innocent_name()
@@ -12,14 +39,17 @@
             ~ hunter_name()
             
         -another_hunter:
-            ~hunter_name()
+            ~ hunter_name()
         
         -experienced_hunter:
-            ~hunter_name()
+            ~ hunter_name()
                       
+        -handy_andy:
+            ~ handy_andy_name()
+            
         -thrall:
-            ~ thrall_name()
-                 
+            ~ thrall_name() 
+            
         -douche:
             ~ douche_name()
             
@@ -34,9 +64,17 @@
           
         - goth:
             ~ goth_name()
+        - ghost:
+            ~ ghost_name()
+            
+        - mortal_lover:
+            ~ mortal_lover_name()
             
         - cheater:
             ~ cheater_name()
+        
+        - vampire:
+            ~ vampire_name()
         
         - else:
             MISSING
@@ -47,6 +85,9 @@
     // GENDER
     { character:
         -normie:
+            m
+            
+        -normie2:
             m
             
         -innocent:
@@ -63,20 +104,12 @@
             
         - gym_bro: // MORE JUICE!
             m
-           
-        - cryptid:
-            nb
-           
-        - former_flame:
-            nb
-          
-        - goth:
-            nb
             
         - cheater:
             m
+        
         - else:
-            MISSING
+            nb
            
     }    
     <> [pronoun]
@@ -95,12 +128,17 @@
 === function hunter_name()
 {~ Hunter|Ranger|Van|Helsing|Snipes|Wesley|Blade|Buffy|Belmont}
 
+=== function ghost_name()
+{~ Echo|Spectre|Guilt|Furie}
 
 === function innocent_name()
 {~ Gemma|Lily|Sunny|Wynona}
 
+=== function handy_andy_name()
+{~ Guy|Handy Andy|Fixit Fred|Wes|The Hammer}
+
 === function thrall_name()
-{~ Guy|Handy Man|Dan|Wes|The Hammer}
+{~ Yours|Only Yours|Slave|Thrall|Worthless|lowly worm}
 
 === function gym_bro_name()
 {~ Big Boy|Buff n Bronze|Jordan|Jett|Django|Joe|Spotter} 
@@ -113,6 +151,9 @@
 
 === function goth_name()
 {~ Esmerelda|Vampire Girl|Dark Poet|Shadowheart|Starlit Eyes|Nyx|Jewel|Ruby}
+
+=== function mortal_lover_name()
+The Lover
 
 === function former_flame_name()
 {~ Mal|Sam|Jem|Sy}

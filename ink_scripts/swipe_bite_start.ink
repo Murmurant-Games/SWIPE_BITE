@@ -11,9 +11,6 @@ INCLUDE swipe_bite_names.ink
 INCLUDE swipe_bite_card_effects_print.ink
 
 
-
-
-
 VAR hunger = 5
 VAR humanity = 10
 VAR heat = 0
@@ -38,6 +35,7 @@ VAR cards_seen = 0
 
 == start ==
 
+~ cards = ()
 
 {endings_reached:->choose_character->}
 
@@ -70,16 +68,15 @@ If your Humanity drops to 0 you will lose yourself.[br]If your Hunger reaches 10
 == first_night
 Memories of your turning twist like sweat-soaked sheets. Flashes of acid clarity clashing with impossible visions.
 
-+ [The cold]
-    Shuddering under a scalding shower desperate to get warm. <>
-+ [The hunger]
-    Bolting down raw meat, insatiably hungry. <>
++ [FORGET]
+    -> random_encounter
++ [REMEMBER]
+    Shuddering under a scalding shower desperate to get warm. Bolting down raw meat, insatiably hungry. [br][br]The horror of yourself in the mirror.
 -
-    <> [br][br]The horror of yourself in the mirror.
 + [Your teeth]
     Standing, holding the unrooted tooth that had fallen past your lips, pushed by a curious tongue that was then pricked by the gleaming fang that pushed through the gape.
 + [Your eyes]
-    Standing, staring... fixated on your reflection as it wavers, fading. First the eyes, though your vision is sharp as your teeth.[br]Aren't eyes the windows of the soul?
+    Standing, staring... fixated on your reflection as it wavers, fading. First the eyes, though your vision is sharp as your teeth.[br][br]Aren't eyes the windows of the soul?
 -
 
 + [You're Afraid]
@@ -87,8 +84,8 @@ Memories of your turning twist like sweat-soaked sheets. Flashes of acid clarity
 
 -
 That's when you knew you weren't human anymore. [br][br]What are you?
-+ [I'm human] #+1 Hunger +1 Humanity
-+ [I'm a vampire] #-1 Hunger -1 Humanity
++ [I'm human] //#+1 Hunger +1 Humanity
++ [I'm a vampire] //#-1 Hunger -1 Humanity
 -
 ->->
 
