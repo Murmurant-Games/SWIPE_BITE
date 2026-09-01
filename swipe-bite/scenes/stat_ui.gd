@@ -6,6 +6,16 @@ class_name StatUI
 @onready var rtl_value: RichTextLabel = $rtlValue
 @onready var anim_player: AnimationPlayer = $animPlayer
 @onready var rtl_prior: RichTextLabel = $Control/rtlPrior
+@onready var trect_stat: TextureRect = $Control2/trectStat
+@onready var trect_stat_2: TextureRect = $Control2/trectStat2
+
+
+var tex_humanity : Texture2D = preload("res://art/humanity.png")
+var tex_hunger : Texture2D = preload("res://art/survived.png")
+var tex_heat : Texture2D = preload("res://art/night.png")
+var tex_night : Texture2D = preload("res://art/cat.png")
+var tex_die : Texture2D = preload("res://art/died.png")
+var tex_win : Texture2D = preload("res://art/win.png")
 
 var stat_name : String = "Default"
 var value
@@ -16,8 +26,16 @@ func setup(_name : String, _value):
 	value = _value
 	prior_value = value
 	
-	rtl_name.text = stat_name
+	rtl_name.text = stat_name.replace("_", " ")
 	rtl_value.text = str(value)
+	
+	match stat_name.to_lower():
+		"hunger": trect_stat.texture = tex_hunger
+		"humanity": trect_stat.texture = tex_humanity
+		"heat": trect_stat.texture = tex_heat
+		"nights_lasted": trect_stat.texture = tex_night
+	
+	trect_stat_2.texture = trect_stat.texture
 	
 func on_value_changed(new_value):
 	prior_value = value

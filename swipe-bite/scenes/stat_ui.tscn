@@ -1,6 +1,8 @@
 [gd_scene format=3 uid="uid://bb4g0ohqgsw1q"]
 
 [ext_resource type="Script" uid="uid://buncttsr2u0kh" path="res://scenes/stat_ui.gd" id="1_tqlgq"]
+[ext_resource type="Texture2D" uid="uid://p4yps26alsnq" path="res://art/cat.png" id="2_5m7h0"]
+[ext_resource type="Material" uid="uid://bcanlgj882ob7" path="res://scenes/stat_ui_mat.tres" id="3_xo5vc"]
 
 [sub_resource type="Animation" id="Animation_tqlgq"]
 length = 0.001
@@ -64,25 +66,60 @@ _data = {
 }
 
 [node name="StatUI" type="VBoxContainer" unique_id=333489683]
-custom_minimum_size = Vector2(128, 60)
-offset_right = 128.0
-offset_bottom = 60.0
-pivot_offset = Vector2(64, 0)
+custom_minimum_size = Vector2(256, 120)
+offset_right = 256.0
+offset_bottom = 120.0
+pivot_offset = Vector2(128, 60)
 size_flags_horizontal = 4
 script = ExtResource("1_tqlgq")
+
+[node name="Control2" type="Control" parent="." unique_id=38214761]
+layout_mode = 2
+
+[node name="trectStat2" type="TextureRect" parent="Control2" unique_id=27016498]
+self_modulate = Color(0, 0, 0, 1)
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 0
+offset_left = 60.0
+offset_top = -12.0
+offset_right = 196.0
+offset_bottom = 126.0
+texture = ExtResource("2_5m7h0")
+expand_mode = 5
+stretch_mode = 5
+
+[node name="trectStat" type="TextureRect" parent="Control2" unique_id=465603481]
+material = ExtResource("3_xo5vc")
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 0
+offset_left = 64.0
+offset_top = -7.0
+offset_right = 192.0
+offset_bottom = 109.0
+texture = ExtResource("2_5m7h0")
+expand_mode = 5
+stretch_mode = 5
 
 [node name="rtlName" type="RichTextLabel" parent="." unique_id=254005926]
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/normal_font_size = 32
 bbcode_enabled = true
-text = "Name"
+text = "NIGHTS_LASTED"
+fit_content = true
+scroll_active = false
 horizontal_alignment = 1
 
 [node name="rtlValue" type="RichTextLabel" parent="." unique_id=1412474882]
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/normal_font_size = 32
 bbcode_enabled = true
 text = "Value"
+fit_content = true
+scroll_active = false
 horizontal_alignment = 1
 
 [node name="animPlayer" type="AnimationPlayer" parent="." unique_id=583021048]
@@ -93,9 +130,13 @@ layout_mode = 2
 
 [node name="rtlPrior" type="RichTextLabel" parent="Control" unique_id=946467116]
 layout_mode = 0
-offset_left = -1.0
-offset_top = 1.0
-offset_right = 132.0
-offset_bottom = 59.0
+offset_left = 139.0
+offset_top = -69.0
+offset_right = 272.0
+offset_bottom = -11.0
+theme_override_constants/outline_size = 12
+theme_override_font_sizes/normal_font_size = 36
 bbcode_enabled = true
+fit_content = true
+scroll_active = false
 horizontal_alignment = 1

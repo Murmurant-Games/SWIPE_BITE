@@ -13,6 +13,7 @@ uniform int colors : hint_range(1, MAXCOLORS) = 8;
 uniform int dither_size: hint_range(1, 8) = 2;
 
 uniform vec3 tint = vec3(1, 1, 1);
+uniform bool invert = true;
 
 float dithering_pattern(ivec2 fragcoord) {
 	const float pattern[] = {
@@ -100,7 +101,9 @@ void fragment() {
 	dithered_color.b = reduce_color(raw.b, (dithering_value - 0.5) * dithering_value + 0.5, colors - 1);
 	
 	dithered_color.a = tex.a * (1.0 - (dithered_color.r + dithered_color.g + dithered_color.b) / 3.0);
-	dithered_color.rgb = vec3(1, 1, 1) - dithered_color.rgb;
+	if (invert){
+		dithered_color.rgb = vec3(1, 1, 1) - dithered_color.rgb;
+	}
 	dithered_color.rgb *= tint;
 	COLOR = dithered_color;
 }

@@ -1,0 +1,30 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://ctb5aip1k5q8c"]
+
+[ext_resource type="Shader" uid="uid://b6tyfqr7i6w47" path="res://scenes/iris_shader.gdshader" id="1_tqjro"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_uolpl"]
+noise_type = 2
+seed = 10
+frequency = 0.0005
+fractal_lacunarity = 4.16
+fractal_gain = -2.865
+cellular_distance_function = 3
+cellular_jitter = 7.295
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_mloxt"]
+width = 128
+height = 209
+noise = SubResource("FastNoiseLite_uolpl")
+
+[resource]
+resource_local_to_scene = true
+shader = ExtResource("1_tqjro")
+shader_parameter/dissolve_texture = SubResource("NoiseTexture2D_mloxt")
+shader_parameter/dissolve_value = 1.0
+shader_parameter/burn_size = 0.0499999988824
+shader_parameter/burn_color = Color(0, 0, 0, 1)
+shader_parameter/enabled = true
+shader_parameter/dithering = true
+shader_parameter/colors = 8
+shader_parameter/dither_size = 2
+shader_parameter/tint = Vector4(0.3, 0.3, 0.3, 1)

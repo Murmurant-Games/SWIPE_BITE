@@ -96,6 +96,12 @@ preload("res://art/portraits/FP_2.png"),
 preload("res://art/portraits/FP_3.png"),
 preload("res://art/portraits/FP_4.png"),
 preload("res://art/portraits/FP_5.png")],
+
+[preload("res://art/portraits/ML_1.png"),
+preload("res://art/portraits/ML_2.png"),
+preload("res://art/portraits/ML_3.png"),
+preload("res://art/portraits/ML_4.png"),
+preload("res://art/portraits/ML_5.png")],
 	
 	
 ]
@@ -166,12 +172,6 @@ var portraits_masc = [
 	preload("res://art/portraits/MK_3.png"),
 	preload("res://art/portraits/MK_4.png"),
 	preload("res://art/portraits/MK_5.png")],
-
-	[preload("res://art/portraits/ML_1.png"),
-	preload("res://art/portraits/ML_2.png"),
-	preload("res://art/portraits/ML_3.png"),
-	preload("res://art/portraits/ML_4.png"),
-	preload("res://art/portraits/ML_5.png")],
 
 	[preload("res://art/portraits/MM_1.png"),
 	preload("res://art/portraits/MM_2.png"),
