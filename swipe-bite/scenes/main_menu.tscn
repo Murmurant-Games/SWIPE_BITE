@@ -8,6 +8,9 @@
 [ext_resource type="Material" uid="uid://dol64y4y6xwox" path="res://scenes/btn_play_mat.tres" id="5_oa1go"]
 [ext_resource type="Texture2D" uid="uid://3oskpvapfq3v" path="res://art/survived.png" id="6_tbmy8"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jbj1t"]
+bg_color = Color(0, 1, 0, 1)
+
 [sub_resource type="Shader" id="Shader_l6cm7"]
 code = "shader_type canvas_item;
 //took it directly from balatro source code
@@ -969,6 +972,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_jbj1t")
 
 [node name="ColorRect" type="ColorRect" parent="PanelContainer" unique_id=475772908]
 material = SubResource("ShaderMaterial_ekxnf")

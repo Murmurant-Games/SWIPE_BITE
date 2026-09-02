@@ -14,7 +14,7 @@ var red_colours = [Color(0.5, 0, 0), Color(0.08, 0, 0), Color(0, 0, 0)]
 var human_colours = [Color(0.03, 0, 0.4), Color(0.56, 0, 0.53), Color(0, 0, 0)]
 
 @onready var story : InkPlayer = $InkPlayer
-@onready var hbox_stats: HBoxContainer = $PanelContainer/hboxStats
+@onready var vbox_stats: VBoxContainer = $PanelContainer/vboxStats
 @onready var hbox_cards: HBoxContainer = $pnlCards/hboxCards
 @onready var ctrl_swipeable: Control = $ctrlSwipeable
 @onready var ctrl_eyes: Control = $ctrlEyes
@@ -26,7 +26,7 @@ var human_colours = [Color(0.03, 0, 0.4), Color(0.56, 0, 0.53), Color(0, 0, 0)]
 func _ready() -> void:
 	story.connect("loaded", on_story_loaded)
 	story.create_story()
-	
+	$rectBlack.visible = true
 	Global.main = self
 
 func _process(delta: float) -> void:
@@ -57,11 +57,11 @@ func on_story_loaded(successfully : bool):
 
 func setup():
 	anim_player.play("Show")
-	hbox_stats.get_children().map(func(x): x.queue_free())
+	vbox_stats.get_children().map(func(x): x.queue_free())
 	story.reset()
 	stat_names.map(func(stat_name): 
 		var stat_ui : StatUI = stat_ui_scene.instantiate()
-		hbox_stats.add_child(stat_ui)
+		vbox_stats.add_child(stat_ui)
 		stat_ui.setup(stat_name, story.get_variable(stat_name))
 		if stats_dict.has(stat_name):
 			stats_dict[stat_name] = stat_ui
@@ -113,12 +113,17 @@ func get_humanity_delta() -> float:
 func get_hunger_delta() -> float:
 	return story.get_variable("hunger") / 10.0
 		
+func get_nights_lasted() -> int:
+	return int(story.get_variable("nights_lasted"))
+		
 func get_hunger_bbcode() -> String:
 	return "[shake level=" + (str(hunger_delta * 5.0)) +  " rate=" + str(hunger_delta * 20) + "]"
 
 func _on_btn_rest_pressed() -> void:
-	Global.current_swipeable.queue_free()
-	setup()
+	#Global.current_swipeable.queue_free()
+	#setup()
+	story.set_variable("nights_lasted", 20)
+	pass
 
 
 func _on_audio_bgm_finished() -> void:

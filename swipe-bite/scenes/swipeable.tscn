@@ -5,6 +5,8 @@
 [ext_resource type="Texture2D" uid="uid://muon5t8qhega" path="res://art/portraits/FP_1.png" id="3_66vuy"]
 [ext_resource type="Material" uid="uid://hirc7vyjy7kn" path="res://scenes/portrat_bg_mat.tres" id="3_gdr0j"]
 [ext_resource type="Texture2D" uid="uid://cj6pjafgda6b8" path="res://art/Card2.jpg" id="4_6q52b"]
+[ext_resource type="Material" uid="uid://3fkl2kixs3gf" path="res://scenes/lore_mat.tres" id="6_hgjwm"]
+[ext_resource type="Texture2D" uid="uid://dskaa7ga54xm2" path="res://art/lore.png" id="7_axgp6"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ujlfe"]
 content_margin_left = 8.0
@@ -169,7 +171,7 @@ shader_parameter/burn_size = 0.02999999932944
 shader_parameter/burn_color = Color(1, 1, 1, 1)
 shader_parameter/enabled = true
 shader_parameter/dithering = true
-shader_parameter/colors = 4
+shader_parameter/colors = 3
 shader_parameter/dither_size = 1
 
 [sub_resource type="Animation" id="Animation_ujlfe"]
@@ -184,7 +186,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [-150.0]
+"values": [600.0]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -196,7 +198,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(250, -20)]
+"values": [Vector2(600, -20)]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
@@ -208,7 +210,7 @@ tracks/2/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(-500, -20)]
+"values": [Vector2(-1000, -20)]
 }
 tracks/3/type = "value"
 tracks/3/imported = false
@@ -260,7 +262,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0, 0.75),
 "transitions": PackedFloat32Array(0.16493845, 0.08246926),
 "update": 0,
-"values": [400.0, -150.0]
+"values": [400.0, -235.0]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -308,10 +310,10 @@ tracks/0/path = NodePath("rtlLeft:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0.23333333, 0.6666667),
+"times": PackedFloat32Array(0.23, 0.6666667),
 "transitions": PackedFloat32Array(0.21022414, 0.21022414),
 "update": 0,
-"values": [Vector2(500, -20), Vector2(250, -20)]
+"values": [Vector2(220, 400), Vector2(220, -20)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -323,7 +325,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0.1, 0.46666667),
 "transitions": PackedFloat32Array(0.18301074, 0.18301074),
 "update": 0,
-"values": [Vector2(-700, -20), Vector2(-500, -20)]
+"values": [Vector2(-170, -420), Vector2(-170, -20)]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
@@ -335,7 +337,7 @@ tracks/2/keys = {
 "times": PackedFloat32Array(0, 0.3),
 "transitions": PackedFloat32Array(0.21763763, 0.21763763),
 "update": 0,
-"values": [Vector2(-125, -375), Vector2(-125, -275)]
+"values": [Vector2(30, -375), Vector2(30, -290)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_gdr0j"]
@@ -344,6 +346,13 @@ _data = {
 &"show": SubResource("Animation_801ac"),
 &"show_choices": SubResource("Animation_gdr0j")
 }
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_h24x7"]
+content_margin_left = 33.0
+content_margin_top = 9.0
+content_margin_right = 8.0
+content_margin_bottom = 4.0
+texture = ExtResource("7_axgp6")
 
 [node name="Swipeable" type="Control" unique_id=1155580600]
 layout_mode = 3
@@ -364,7 +373,7 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -580.0
+offset_left = -212.0
 offset_top = -345.0
 offset_right = 588.0
 offset_bottom = 344.0
@@ -380,10 +389,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -132.06242
-offset_top = -150.0
-offset_right = 132.06242
-offset_bottom = 262.99976
+offset_left = 24.937561
+offset_top = 600.0
+offset_right = 289.06244
+offset_bottom = 1012.99976
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(100, 300)
@@ -415,8 +424,8 @@ grow_vertical = 2
 [node name="rtlTitle" type="RichTextLabel" parent="pnlCard/Control/VBoxContainer" unique_id=1196702284]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
-theme_override_constants/outline_size = 10
-theme_override_font_sizes/normal_font_size = 26
+theme_override_constants/outline_size = 16
+theme_override_font_sizes/normal_font_size = 34
 bbcode_enabled = true
 text = "Douche"
 fit_content = true
@@ -425,6 +434,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="pnlPic" type="PanelContainer" parent="pnlCard/Control/VBoxContainer" unique_id=1275081791]
+visible = false
 custom_minimum_size = Vector2(100, 200)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_qqt24")
@@ -448,8 +458,8 @@ stretch_mode = 5
 clip_contents = false
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/outline_size = 8
-theme_override_font_sizes/normal_font_size = 20
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/normal_font_size = 28
 bbcode_enabled = true
 text = "asdasdasd"
 fit_content = true
@@ -461,15 +471,18 @@ self_modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 
 [node name="rtlLeft" type="RichTextLabel" parent="." unique_id=1244383731]
+clip_contents = false
 layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5
 anchor_bottom = 0.5
-offset_left = 250.0
+offset_left = 600.0
 offset_top = -20.0
-offset_right = 499.99982
-offset_bottom = 20.0
+offset_right = 849.9999
+offset_bottom = 19.999985
 grow_vertical = 2
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/normal_font_size = 28
 bbcode_enabled = true
 text = "Left"
 fit_content = true
@@ -478,18 +491,21 @@ scroll_following = true
 horizontal_alignment = 2
 
 [node name="rtlRight" type="RichTextLabel" parent="." unique_id=1925841073]
+clip_contents = false
 layout_mode = 1
 anchors_preset = 6
 anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -500.0
+offset_left = -1000.0
 offset_top = -20.0
-offset_right = -250.0
+offset_right = -750.0
 offset_bottom = 20.0
 grow_horizontal = 0
 grow_vertical = 2
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/normal_font_size = 28
 bbcode_enabled = true
 text = "Right"
 fit_content = true
@@ -497,6 +513,7 @@ scroll_active = false
 scroll_following = true
 
 [node name="rtlUp" type="RichTextLabel" parent="." unique_id=1923106442]
+clip_contents = false
 layout_mode = 1
 anchors_preset = 6
 anchor_left = 1.0
@@ -509,6 +526,8 @@ offset_right = 125.0
 offset_bottom = -360.0
 grow_horizontal = 0
 grow_vertical = 2
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/normal_font_size = 28
 bbcode_enabled = true
 text = "Up"
 fit_content = true
@@ -518,23 +537,26 @@ horizontal_alignment = 1
 
 [node name="animPlayer" type="AnimationPlayer" parent="." unique_id=640789019]
 libraries/ = SubResource("AnimationLibrary_gdr0j")
-autoplay = &"show"
 
 [node name="pnlLore" type="PanelContainer" parent="." unique_id=1711918514]
+material = ExtResource("6_hgjwm")
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -574.0
-offset_top = 210.0
-offset_right = 573.0
+offset_left = -266.0
+offset_top = 188.0
+offset_right = 576.0
 offset_bottom = 324.0
 grow_horizontal = 2
 grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxTexture_h24x7")
 
 [node name="rtlLore" type="RichTextLabel" parent="pnlLore" unique_id=1757967185]
 layout_mode = 2
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/normal_font_size = 28
 bbcode_enabled = true
 text = "Lore"
 fit_content = true

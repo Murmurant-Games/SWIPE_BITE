@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://b8x2aur6fg6gb" path="res://scenes/eye.gd" id="1_60o0r"]
 [ext_resource type="Texture2D" uid="uid://ch1b4xa388nnc" path="res://art/eye.png" id="1_xbsf0"]
 [ext_resource type="Material" uid="uid://r4hc37of0b55" path="res://scenes/eye_white_mat.tres" id="2_e6m2j"]
+[ext_resource type="Material" uid="uid://ctb5aip1k5q8c" path="res://scenes/iris_mat.tres" id="3_7wf7k"]
 [ext_resource type="Texture2D" uid="uid://cce11jqed8pyr" path="res://art/eye_rim.png" id="5_7wf7k"]
 
 [sub_resource type="Gradient" id="Gradient_60o0r"]
@@ -174,6 +175,7 @@ mouse_filter = 0
 texture = ExtResource("1_xbsf0")
 
 [node name="trectRetina" type="TextureRect" parent="trectWhite" unique_id=520087930]
+material = ExtResource("3_7wf7k")
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5

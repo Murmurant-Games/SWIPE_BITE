@@ -1,0 +1,24 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://bcanlgj882ob7"]
+
+[ext_resource type="Shader" uid="uid://di7njuo6mhpyb" path="res://scenes/stat_ui_shader.gdshader" id="1_an3c2"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_mlich"]
+frequency = 0.0268
+cellular_distance_function = 3
+cellular_jitter = 7.295
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_wc7h0"]
+width = 128
+height = 128
+noise = SubResource("FastNoiseLite_mlich")
+
+[resource]
+shader = ExtResource("1_an3c2")
+shader_parameter/dissolve_texture = SubResource("NoiseTexture2D_wc7h0")
+shader_parameter/dissolve_value = 1.0
+shader_parameter/burn_size = 0.0499999988824
+shader_parameter/burn_color = Color(0.4765625, 0, 0.03264455, 1)
+shader_parameter/enabled = true
+shader_parameter/dithering = true
+shader_parameter/colors = 4
+shader_parameter/dither_size = 1

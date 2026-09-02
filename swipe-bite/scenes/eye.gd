@@ -4,6 +4,7 @@ class_name Eye
 
 @onready var trect_white: TextureRect = $trectWhite
 @onready var trect_retina: TextureRect = $trectWhite/trectRetina
+@onready var retina_mat : ShaderMaterial = trect_retina.material
 @onready var white_mat : ShaderMaterial = $trectWhite/trectRetina/ColorRect.material
 @onready var retina_gradient : Gradient = trect_retina.texture.gradient
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
@@ -126,7 +127,8 @@ func update_heat_visuals():
 		showing = true
 		animation_player.play("show")
 		#global_position = Vector2(0, 0)
-		trect_retina.self_modulate = Color(randf(), randf(), randf())
+		#trect_retina.self_modulate = Color(randf(), randf(), randf())
+		retina_mat.set_shader_parameter("tint", Color(randf_range(0.5, 0.8), randf_range(0.5, 0.8), randf_range(0.5, 0.8)))
 		#initial_pos = Vector2(randi_range(0, 1152), randi_range(0, 658))
 	elif heat < heat_threshold and showing:
 		showing = false

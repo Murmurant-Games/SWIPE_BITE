@@ -5,7 +5,9 @@
 [ext_resource type="PackedScene" uid="uid://bi31d1450kg8r" path="res://scenes/eye.tscn" id="2_tbgi4"]
 [ext_resource type="Material" uid="uid://s5eirkapimq4" path="res://scenes/bg_shader_mat.tres" id="2_tefeu"]
 [ext_resource type="Resource" uid="uid://dqdv1eu06jvm5" path="res://story/swipe_bite_start.json" id="3_sugp2"]
+[ext_resource type="Material" uid="uid://rb5p5e04mube" path="res://scenes/stats_mat.tres" id="4_jbj1t"]
 [ext_resource type="PackedScene" uid="uid://cey26of3178o0" path="res://scenes/card.tscn" id="4_jyhfs"]
+[ext_resource type="Texture2D" uid="uid://fx0ddgsl82xm" path="res://art/window2.png" id="5_jbj1t"]
 [ext_resource type="AudioStream" uid="uid://bnajnp0gx33rq" path="res://sound/music/juanjo_ sound - continuum.ogg" id="7_a8y0u"]
 [ext_resource type="AudioStream" uid="uid://bbscbfiuir1yu" path="res://sound/music/juanjo_ sound - crop circles.ogg" id="8_jkv2x"]
 [ext_resource type="AudioStream" uid="uid://bglsn3l1uupb2" path="res://sound/music/juanjo_ sound - elevated.ogg" id="9_jbj1t"]
@@ -15,17 +17,9 @@
 [ext_resource type="AudioStream" uid="uid://hwgyuqgicro8" path="res://sound/music/juanjo_ sound - song of entities.ogg" id="13_gqmmt"]
 [ext_resource type="AudioStream" uid="uid://cgi0vlf3cnntx" path="res://sound/music/juanjo_ sound - The Lobby.ogg" id="14_yc10j"]
 
-[sub_resource type="Gradient" id="Gradient_tefeu"]
-offsets = PackedFloat32Array(0.76993865, 1)
-colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 0)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_tipki"]
-gradient = SubResource("Gradient_tefeu")
-fill_from = Vector2(0.5, 0)
-fill_to = Vector2(0.5, 1)
-
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_tefeu"]
-texture = SubResource("GradientTexture2D_tipki")
+content_margin_top = 10.0
+texture = ExtResource("5_jbj1t")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o1cif"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
@@ -250,16 +244,22 @@ offset_bottom = 127.0
 scale = Vector2(0.25, 0.25)
 
 [node name="PanelContainer" type="PanelContainer" parent="." unique_id=774679135]
+material = ExtResource("4_jbj1t")
 layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_bottom = 73.0
-grow_horizontal = 2
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 311.0
+grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxTexture_tefeu")
 
 [node name="hboxStats" type="HBoxContainer" parent="PanelContainer" unique_id=35957895]
+visible = false
 layout_mode = 2
 alignment = 1
+
+[node name="vboxStats" type="VBoxContainer" parent="PanelContainer" unique_id=655475692]
+layout_mode = 2
+theme_override_constants/separation = 26
 
 [node name="InkPlayer" type="Node" parent="." unique_id=1666969425]
 script = ExtResource("2_0wfyh")
@@ -273,13 +273,17 @@ anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -61.0
+offset_left = 313.0
+offset_top = -648.0
+offset_right = -1.0
+offset_bottom = -598.0
 grow_horizontal = 2
 grow_vertical = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_o1cif")
 
 [node name="hboxCards" type="HBoxContainer" parent="pnlCards" unique_id=1320570470]
 layout_mode = 2
+alignment = 1
 
 [node name="Card" parent="pnlCards/hboxCards" unique_id=559367489 instance=ExtResource("4_jyhfs")]
 layout_mode = 2
@@ -293,14 +297,17 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="btnRest" type="Button" parent="." unique_id=2024865200]
+visible = false
 layout_mode = 0
 offset_left = 1048.0
 offset_top = 524.0
 offset_right = 1149.0
 offset_bottom = 581.0
+theme_override_font_sizes/font_size = 24
 text = "RESET"
 
 [node name="rectBlack" type="ColorRect" parent="." unique_id=1827456266]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

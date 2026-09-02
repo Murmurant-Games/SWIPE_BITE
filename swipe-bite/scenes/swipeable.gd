@@ -3,6 +3,7 @@ extends Control
 class_name Swipeable
 
 @export var portrait_dissolve : float = 1.0
+@export var lore_tint : Color = Color(0.4, 0.2, 0.4)
 
 @onready var rtl_story_text: RichTextLabel = $pnlCard/Control/VBoxContainer/rtlStoryText
 @onready var pnl_card: PanelContainer = $pnlCard
@@ -20,7 +21,14 @@ class_name Swipeable
 @onready var pnl_stylebox : StyleBoxFlat = $pnlCard.get_theme_stylebox("panel")
 @onready var rtl_lore: RichTextLabel = $pnlLore/rtlLore
 @onready var pnl_lore: PanelContainer = $pnlLore
+@onready var mat_lore : ShaderMaterial = pnl_lore.material
 
+var tex_humanity : Texture2D = preload("res://art/humanity.png")
+var tex_hunger : Texture2D = preload("res://art/survived.png")
+var tex_heat : Texture2D = preload("res://art/night.png")
+var tex_night : Texture2D = preload("res://art/cat.png")
+var tex_die : Texture2D = preload("res://art/died.png")
+var tex_win : Texture2D = preload("res://art/win.png")
 
 var card_bgs : Array = [
 	preload("res://art/Card1.jpg"),
@@ -40,12 +48,15 @@ var pos_smoothing_factor : float = 0.25
 var tagless_text = ""
 var character_data = {}
 var lines = []
+var setting_up : bool = false
 
 func setup(story : InkPlayer):
+	setting_up = true
 	tags = []
 	lines = []
 	character_data = {}
 	var humanity_delta = Global.main.get_humanity_delta()
+	mat_lore.set_shader_parameter("tint", lore_tint)
 	Global.current_swipeable = self
 	if story.get_can_continue():
 		
@@ -55,7 +66,7 @@ func setup(story : InkPlayer):
 		lines.append(txt)
 		print("Line = " + txt)
 		while should_skip(story, txt, tags):
-			
+			await RenderingServer.frame_post_draw
 			txt = story.continue_story()
 			var inner_tags = story.get_current_tags().map(func(x): return str(x))
 			if inner_tags.size() > 0:
@@ -85,18 +96,26 @@ func setup(story : InkPlayer):
 			if lower_line.contains("[stats-pursue]"):
 				character_data["pursue"] = line.replace("[stats-pursue]", "")
 			if lower_line.contains("[night]"):
-				line = line.replace("[night]", "")
+				character_data["night"] = lower_line.replace("[night]", "")
 				#print("Encountered night.")
 			if lower_line.contains("[warning]"):
 				line = line.replace("[warning]", "")
+				character_data["warning"] = lower_line.replace("[warning]", "")
 				#print("Encountered warning.")
-			if lower_line.contains("[explain]"):
-				line = line.replace("[explain]", "")
-				#print("Encountered explain.")
+			if lower_line.contains("[explainer]"):
+				#line = line.replace("[explainer]", "")
+				print("Encountered explain.")
+			if lower_line.contains("[end]"):
+				character_data["end"] = lower_line.replace("[end]", "")
+				print("Found end")
 				
 			
 			
 		txt = txt.replace("[br]", "\n")
+		txt = txt.replace("[explainer]", "")
+		txt = txt.replace("[warning]", "")
+		txt = txt.replace("[night]", "")
+		txt = txt.replace("[end]", "")
 			
 		tagless_text = Utils.text_without_tags(txt)
 		if character_data.has("bio"):
@@ -127,7 +146,9 @@ func setup(story : InkPlayer):
 			portrait_mat.set_shader_parameter("colour_1", Color(randf(), randf(), randf()))
 			portrait_mat.set_shader_parameter("colour_2", Color(randf(), randf(), randf()))
 			portrait_mat.set_shader_parameter("colour_3", Color(0, 0, 0))
+			card_bg_mat.set_shader_parameter("colors", 4)
 			card_bg_mat.set_shader_parameter("tint", Color(randf_range(0.3, 0.7), randf_range(0.3, 0.7), randf_range(0.3, 0.7)))
+			
 			trect_card_bg.texture = card_bgs.pick_random()
 			
 			
@@ -138,7 +159,9 @@ func setup(story : InkPlayer):
 				trect_portrait.texture = Portraits.get_portrait()
 			trect_portrait.flip_h = randf() > 0.5
 			
-			pnl_stylebox.bg_color = Color(randf_range(0.1, 0.4), randf_range(0.1, 0.4), randf_range(0.1, 0.4))
+			
+			
+			#pnl_stylebox.bg_color = Color(randf_range(0.1, 0.4), randf_range(0.1, 0.4), randf_range(0.1, 0.4))
 			character_mat.get_shader_parameter("dissolve_texture").noise.seed = randi()
 			
 			
@@ -167,6 +190,46 @@ func setup(story : InkPlayer):
 			choices.append(choice)
 			
 		else:
+			if character_data.has("warning"):
+				
+				var warning_line : String = character_data["warning"].to_lower()
+				print("Has warning: " + warning_line)
+				if warning_line.contains("attention"):
+					print("Warning heat")
+					trect_portrait.texture = tex_heat
+				elif warning_line.contains("humanity"):
+					print("Warning humanity")
+					trect_portrait.texture = tex_humanity
+				elif warning_line.contains("hungry"):
+					print("Warning hunger")
+					trect_portrait.texture = tex_hunger
+				pnl_pic.visible = true
+				card_bg_mat.set_shader_parameter("tint", Color(0.1, 0.1, 0.1))
+				
+			if character_data.has("night"):
+				print("Nox est")
+				trect_portrait.texture = tex_night
+				pnl_pic.visible = true
+				card_bg_mat.set_shader_parameter("colors", 4)
+				card_bg_mat.set_shader_parameter("tint", Color(0.1, 0.1, 0.1))
+			
+			if character_data.has("end"):
+				if Global.main.get_nights_lasted() >= 20:
+					trect_card_bg.texture = tex_win
+					card_bg_mat.set_shader_parameter("invert", false)
+					card_bg_mat.set_shader_parameter("tint", Color(0.5, 0.5, 0.5))
+				else:
+					trect_card_bg.texture = tex_die
+					card_bg_mat.set_shader_parameter("invert", false)
+					card_bg_mat.set_shader_parameter("tint", Color(0.5, 0.5, 0.5))
+					card_bg_mat.set_shader_parameter("colors", 3)
+			
+			else:
+				#card_bg_mat.set_shader_parameter("tint", Color(0.1, 0.1, 0.1))
+				card_bg_mat.set_shader_parameter("invert", true)
+				#card_bg_mat.set_shader_parameter("colors", 4)
+				
+			
 			current_choices.map(
 				func(ink_choice : InkChoice):
 					var choice : Choice = Choice.new()
@@ -178,23 +241,26 @@ func setup(story : InkPlayer):
 			if choice_txt.begins_with("SPARE / AVOID"):
 				choice_txt = "Avoid"
 				if character_data.has("avoid"):
-					choice_txt += "\n" + character_data["avoid"]
+					choice_txt += "\n" + character_data["avoid"].replace(",", "\n").trim_suffix(" ")
 			if choice_txt.begins_with("FEED / FACE"):
 				choice_txt = "Pursue"
 				if character_data.has("pursue"):
-					choice_txt += "\n" + character_data["pursue"]
+					choice_txt += "\n" + character_data["pursue"].replace(",", "\n")
+					#choice_txt += "\n" + character_data["pursue"].replace(",", "\n").trim_suffix(" ")
 			choice_texts[index].text = choice_txt
 	else:
 		rtl_lore.text = "done"
 		
 	rtl_lore.visible_characters = 0
 	rtl_lore.visible_characters_behavior = TextServer.VC_CHARS_AFTER_SHAPING
+	setting_up = false
+	anim_player.play("show")
 	await anim_player.animation_finished
 	show_next_char()
 
 func _process(delta: float) -> void:
 	if is_dragging:
-		var mouse_x_delta = get_local_mouse_position().x / 400.0
+		var mouse_x_delta = (pnl_card.get_local_mouse_position().x - 125) / 400.0
 		mouse_x_delta = clampf(mouse_x_delta, -1, 1)
 		card_target_pos.x = card_inital_pos.x + lerpf(0, 200, mouse_x_delta)
 		pnl_card.rotation_degrees = lerpf(0, 30, mouse_x_delta)
@@ -213,10 +279,11 @@ func start_drag():
 
 func end_drag():
 	is_dragging = false
-	var mouse_pos = get_local_mouse_position()
-	if mouse_pos.x > -280 and mouse_pos.x < 280:
+	var mouse_pos = pnl_card.get_local_mouse_position()
+	mouse_pos.x -= 125
+	if mouse_pos.x > -140 and mouse_pos.x < 140:
 		pass
-	elif mouse_pos.x < -280:
+	elif mouse_pos.x < -140:
 		swipe_left()
 	else:
 		swipe_right()
