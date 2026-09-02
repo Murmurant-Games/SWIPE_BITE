@@ -11,7 +11,7 @@
 
         -innocent:
             
-                Hunger -1, Humanity -3, Heat +1
+                Hunger -1, Humanity -3
                 
         -hunter:
                 Hunger +2, Heat -2
@@ -21,13 +21,13 @@
 
 
         -experienced_hunter:
-                Hunger +2, Heat -3
+                Hunger +3, Heat -3
 
         -handy_andy:
                 Hunger -1, Humanity -2
 
         -thrall:
-                Hunger -1, Humanity -2
+                Hunger -2
                        
         -douche:
 
@@ -39,19 +39,19 @@
 
                 
         - cryptid:
-                Heat -2, Humanity -1
+                Heat -2
 
         - former_flame:
-                Humanity -2, Hunger -2
+                Hunger -2
                    
         - goth:
-                Humanity +1, Hunger -1
+                Hunger -1
                 
         - mortal_lover:
                 Humanity +1, Hunger -1
 
         - ghost:
-                Humanity +2
+                Humanity +1, Hunger +1
                  
         - cheater:
                 Hunger -2
@@ -70,16 +70,16 @@
                 Hunger +1
         -innocent:
 
-                Hunger +1, Humanity +1
+                Hunger +1
 
                 
         -hunter:
 
-                Hunger +1, Heat +2
+                Hunger +1, Heat +1
 
                 
         -another_hunter:
-                Hunger +1, Heat +2
+                Hunger +1, Heat +1
 
 
         -experienced_hunter:
@@ -89,7 +89,7 @@
         -handy_andy:
                 Hunger +1
         -thrall:
-                Hunger +1, Heat -2, Humanity -1
+                Heat -2, Humanity -1
                        
         -douche:
             Hunger +1
@@ -111,11 +111,11 @@
             Humanity +2, Hunger +2
 
         - ghost:
-                Humanity -2 
+            Humanity -2 
                 
         - cheater:
 
-                Hunger +1
+            Hunger +1
                 
         - else:
             NO EFFECT TEXT

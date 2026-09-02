@@ -19,7 +19,11 @@ VAR hunger_end_trigger = 10
 VAR humanity_end_trigger = 0
 VAR heat_end_trigger = 10
 
+VAR survial_end_trigger = 5
+
 VAR hhh_warning_threshold = 3
+
+VAR player_class = "newly_turned"
 
 VAR health = 10
 VAR sanity = 5
@@ -52,11 +56,26 @@ Swipe...
 + [Start Game]
     
 -
-
-~ hunger = 5
-~ humanity = 10
-~ heat = 0
-~ nights_lasted = 0
+{player_class == "newly_turned":
+    ~ hunger = 5
+    ~ humanity = 10
+    ~ heat = 0
+    ~ nights_lasted = 0
+    ~ hunger_end_trigger = 10
+    ~ humanity_end_trigger = 0
+    ~ heat_end_trigger = 10
+    ~ survial_end_trigger = 5
+    
+    - else:
+    ~ hunger = 5
+    ~ humanity = 10
+    ~ heat = 0
+    ~ nights_lasted = 0
+    ~ hunger_end_trigger = 10
+    ~ humanity_end_trigger = 0
+    ~ heat_end_trigger = 15
+    ~ survial_end_trigger = 5
+    }
 
 {not endings_reached:->first_night->}
 
@@ -90,6 +109,7 @@ Memories of your turning twist like sweat-soaked sheets. Flashes of acid clarity
 
 -
 That's when you knew you weren't human anymore. [br][br]What are you?
+
 + [I'm Human] //#+1 Hunger +1 Humanity
 + [I'm a Vampire] //#-1 Hunger -1 Humanity
 -
@@ -125,8 +145,12 @@ That's when you knew you weren't human anymore. [br][br]What are you?
 
 == choose_character 
 What are you?
+No modifiers [stats-pursue]
+Heat Max +5,Unlock Devotees [stats-avoid]
     + [Newly Turned]
-    + {heat_ending}[Fatal Siren]
+        ~ player_class = "newly_turned"
+    + [Fatal Siren]
+        ~ player_class = "fatal_siren"
     
     //(+1 Feed / +1 Heat) More Heat = More Power
     //+ {hunger_ending}[Damned Searcher] // Find a Cure

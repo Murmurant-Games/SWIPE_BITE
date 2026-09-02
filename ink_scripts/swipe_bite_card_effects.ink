@@ -21,10 +21,10 @@
             {feed:
                 ~ alter(hunger,-1)
                 ~ alter(humanity,-3)
-                ~ alter(heat,1)
+                //~ alter(heat,1)
             - else:
                 ~ alter(hunger,1)
-                ~ alter(humanity,1)
+                //~ alter(humanity,1)
                 }
         -hunter:
 
@@ -71,14 +71,14 @@
         -thrall:
 
             {feed:
-                ~ alter(hunger,-1)
+                ~ alter(hunger,-2)
                 
             - else:
-                ~ alter(hunger,1)
                 ~ alter(heat,-2)
                 ~ alter(humanity,-1)
                 ~ tomorrow_night += thrall
-                }       
+                }   
+                
         -douche:
 
             {feed:
@@ -102,29 +102,28 @@
                 }
         - cryptid:
             {feed:
-                ~ alter(heat,-1)
-                ~ alter(hunger,0)
+                ~ alter(heat,-2)
+                //~ alter(hunger,0)
             - else:
-                ~ alter(humanity,2)
-                ~ alter(hunger,1)
+                //~ alter(humanity,2)
+                ~ alter(humanity,1)
                 }
         - former_flame:
             {feed:
-                ~ alter(humanity,-2)
+                //~ alter(humanity,-2)
                 ~ alter(hunger,-2)
                 ~ tomorrow_night += ghost
             - else:
-                ~ alter(humanity,1)
+                //~ alter(humanity,1)
                 ~ alter(hunger,1)
                 ~ tomorrow_night += former_flame
                 }   
         - goth:
             {feed:
-                ~ alter(humanity,1)
                 ~ alter(hunger,-1)
                 ~ tomorrow_night += mortal_lover
             - else:
-                ~ alter(humanity,-1)
+                //~ alter(humanity,-1)
                 ~ alter(hunger,1)
                 }
         - mortal_lover:
@@ -133,27 +132,27 @@
                 ~ alter(hunger,-1)
                 ~ tomorrow_night += mortal_lover
             - else:
-                ~ alter(humanity,2)
-                ~ alter(hunger,2)
+                ~ alter(humanity,3)
+                ~ alter(hunger,1)
                 } 
 
                 
         - ghost:
             {feed:
                 ~ alter(humanity,2)
-                ~ alter(hunger,0)
-                ~ alter(heat,0)
+                ~ alter(hunger,1)
+                //~ alter(heat,0)
             - else:
                 ~ alter(humanity,-2)
-                ~ alter(hunger,0)
+                //~ alter(hunger,0)
                 ~ tomorrow_night += ghost
                 }
         - cheater:
             {feed:
                 ~ alter(hunger,-2)
-                ~ alter(heat,0)
+                //~ alter(heat,0)
             - else:
-                ~ alter(hunger,2)
+                ~ alter(hunger,1)
                 }
         - else:
             NO EFFECT CODED

@@ -30,7 +30,22 @@ You lasted {nights_lasted} nights... survival is all that matters and you are a 
 
 ~ endings_reached ++
 
-Endings Unlocked:[br][br]{endings_reached}  [end]
+Endings Unlocked:[br][br]
+
+{hunger_ending:
+    <>[br][br][b]Through Hunger, Humanity[/b]
+}
+{survival_ending:
+    <>[br][br][b]Horrors Persist[/b]
+}
+{heat_ending:
+    <>[br][br][b]Blaze of Glory[/b]
+}
+{humanity_ending:
+    <>[br][br][b]Pure Evil[/b]
+}
+
+<>[end]
 ->continue->
 
 ->start

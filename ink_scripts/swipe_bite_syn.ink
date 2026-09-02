@@ -15,7 +15,8 @@
             ~ hunter_lore()                      
         -thrall:
             ~ thrall_lore()
-                 
+        -handy_andy:
+            ~ handy_andy_lore()         
         -douche:
             ~ douche_lore()
             
@@ -27,9 +28,14 @@
            
         - former_flame:
             ~ former_flame_lore()
-          
+        - mortal_lover:
+            ~ mortal_lover_lore()
+            
         - goth:
             ~ goth_lore()
+            
+        - ghost:
+            ~ ghost_lore()
             
         - cheater:
             ~ cheater_lore()

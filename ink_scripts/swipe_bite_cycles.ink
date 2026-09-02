@@ -28,7 +28,7 @@
         ->continue->
         }
         }
-    {nights_lasted >= 5:
+    {nights_lasted >= survial_end_trigger:
         -> survival_ending
         }
 
@@ -44,28 +44,30 @@
 {  nights_lasted:
     - 1:
     
-        Your first night hunting...
+        You have opportunities tonight...
         ~ cards += (douche, normie, normie2, cheater, gym_bro)
         ->hunt
     -2:
-        Your second night...
+        Your first night...
         ~ cards += (douche, normie, cheater, normie2, innocent, gym_bro, goth, former_flame)
             
     -3:
-        Three nights...
+        Your second night...
         ~ cards += (douche, normie, cheater, hunter, handy_andy, innocent, goth, normie2)
 
     -else:
-        You survive another night.
+        You survived another night.
         ~ cards += (douche, normie, cheater, hunter, innocent, goth, gym_bro, cryptid, former_flame)
     
     }
 
     ~ cards += tomorrow_night
 //, cryptid, vampire, (goth), former_flame, ghost, your_sire, detective, mortal_lover
+    {hunger<1:
+        ~ hunger = 1
+    }
 
-
-<> It ends with {~an orange bruise of sunrise|an overcast sky|pouring rain soaking the streets|the smell of blood|pain|horror|hunger|exhaustion|a muffled scream}.[br][br]You sleep until {~the horrid eye of the sun closes and the silver, blind moon's is open|hunger wakes you|nightmares drive you from your bed|the pings of your phone can no longer be ignored|the howl of a cat wakes you}. [night]
+<> It ends with {~an orange bruise of sunrise|an overcast sky|pouring rain soaking the streets|the smell of blood|pain|horror|hunger|exhaustion|a muffled scream}.[br][br]You sleep until {~the horrid eye of the sun closes and the silver, blind moon's is open|hunger wakes you|nightmares drive you from your bed|the pings of your phone can no longer be ignored|the howl of a cat wakes you}.[br][br]You are hungry again. [night]
 -(hunt)
     ~ tomorrow_night = ()
 + [HUNT]
