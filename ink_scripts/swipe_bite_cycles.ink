@@ -1,28 +1,28 @@
 
 
 == win_lose_check
-    {hunger > 10:
+    {hunger > hunger_end_trigger:
         -> hunger_ending
         }
-    {hunger > 8:
+    {hunger > hunger_end_trigger - hhh_warning_threshold:
         {once:
             - You are growing hungrier, maddeningly hungry. [warning]
                 ->continue->
         }
         }
-    {humanity < 0:
+    {humanity < humanity_end_trigger:
         -> humanity_ending
         }
-    {humanity < 2:
+    {humanity < humanity_end_trigger + hhh_warning_threshold:
         {once:
             - You are losing touch with you humanity. [warning]
         ->continue->
         }
         }
-    {heat > 10:
+    {heat > heat_end_trigger:
         -> heat_ending
         }
-    {heat > 8:
+    {heat > heat_end_trigger - hhh_warning_threshold:
         {once:
             - You are drawing too much attention. [warning]
         ->continue->
