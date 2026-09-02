@@ -27,6 +27,7 @@ var tex_humanity : Texture2D = preload("res://art/humanity.png")
 var tex_hunger : Texture2D = preload("res://art/survived.png")
 var tex_heat : Texture2D = preload("res://art/night.png")
 var tex_night : Texture2D = preload("res://art/cat.png")
+var tex_night_card : Texture2D = preload("res://art/night_card.png")
 var tex_die : Texture2D = preload("res://art/died.png")
 var tex_win : Texture2D = preload("res://art/win.png")
 
@@ -116,6 +117,8 @@ func setup(story : InkPlayer):
 		txt = txt.replace("[warning]", "")
 		txt = txt.replace("[night]", "")
 		txt = txt.replace("[end]", "")
+		if txt.begins_with("you are losing touch with you humanity."):
+			txt = "you are losing touch with your humanity."
 			
 		tagless_text = Utils.text_without_tags(txt)
 		if character_data.has("bio"):
@@ -207,11 +210,15 @@ func setup(story : InkPlayer):
 				card_bg_mat.set_shader_parameter("tint", Color(0.1, 0.1, 0.1))
 				
 			if character_data.has("night"):
-				print("Nox est")
-				trect_portrait.texture = tex_night
-				pnl_pic.visible = true
+				#print("Nox est")
+				trect_card_bg.texture = tex_night_card
 				card_bg_mat.set_shader_parameter("colors", 4)
-				card_bg_mat.set_shader_parameter("tint", Color(0.1, 0.1, 0.1))
+				card_bg_mat.set_shader_parameter("invert", true)
+				card_bg_mat.set_shader_parameter("tint", Color(0.5, 0.5, 0.5))
+				#trect_portrait.texture = tex_night
+				#pnl_pic.visible = true
+				#card_bg_mat.set_shader_parameter("colors", 4)
+				#card_bg_mat.set_shader_parameter("tint", Color(0.1, 0.1, 0.1))
 			
 			if character_data.has("end"):
 				if Global.main.get_nights_lasted() >= 20:
@@ -238,13 +245,17 @@ func setup(story : InkPlayer):
 			
 		for index in choices.size():
 			var choice_txt = choices[index].get_text()
-			if choice_txt.begins_with("SPARE / AVOID"):
-				choice_txt = "Avoid"
-				if character_data.has("avoid"):
+			if character_data.has("avoid"):
+			#if choice_txt.begins_with("SPARE / AVOID"):
+				#choice_txt = "Avoid"
+				if choice_txt.begins_with("SPARE / AVOID"):
+					choice_txt = "Avoid"
+				if character_data.has("avoid") and index == 1:
 					choice_txt += "\n" + character_data["avoid"].replace(",", "\n").trim_suffix(" ")
-			if choice_txt.begins_with("FEED / FACE"):
-				choice_txt = "Pursue"
-				if character_data.has("pursue"):
+			if character_data.has("pursue"):
+				if choice_txt.begins_with("FEED / FACE"):
+					choice_txt = "Pursue"
+				if character_data.has("pursue") and index == 0:
 					choice_txt += "\n" + character_data["pursue"].replace(",", "\n")
 					#choice_txt += "\n" + character_data["pursue"].replace(",", "\n").trim_suffix(" ")
 			choice_texts[index].text = choice_txt
@@ -336,6 +347,8 @@ func should_skip(story, txt : String, tags) -> bool:
 	if txt == "\n":
 		return true
 	if txt.ends_with("[stats-pursue]\n"):
+		return true
+	if txt.ends_with("[stats-avoid]\n"):
 		return true
 	if txt.ends_with("[pronoun]\n"):
 		return true

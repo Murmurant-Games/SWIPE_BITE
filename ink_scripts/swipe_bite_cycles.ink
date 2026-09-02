@@ -15,7 +15,7 @@
         }
     {humanity < humanity_end_trigger + hhh_warning_threshold:
         {once:
-            - You are losing touch with you humanity. [warning]
+            - You are losing touch with your humanity. [warning]
         ->continue->
         }
         }
